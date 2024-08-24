@@ -30,7 +30,7 @@ import java.util.Random;
 
 public class RegionListener extends Listener {
     @Inject
-    private static RegionsDatabase regionsDatabase;
+    private static RegionDatabase regionDatabase;
 
     private void declineCancellableEvent(String key, Player player, Cancellable event, @Nullable Block block) {
         //Messages.sendMessage(key, player);
@@ -46,7 +46,7 @@ public class RegionListener extends Listener {
     @EventHandler
     private void playerPlaceBlock(BlockPlaceEvent event) {
         Location location = event.getBlockPlaced().getLocation();
-        Optional<Region> region = regionsDatabase.getRegion(location);
+        Optional<Region> region = regionDatabase.getRegion(location);
         if (region.isEmpty()) {
             return;
         }
@@ -61,7 +61,7 @@ public class RegionListener extends Listener {
     @EventHandler
     private void playerBreakBlock(BlockBreakEvent event) {
         Location location = event.getBlock().getLocation();
-        Optional<Region> region = regionsDatabase.getRegion(location);
+        Optional<Region> region = regionDatabase.getRegion(location);
         if (region.isEmpty()) {
             return;
         }
@@ -96,7 +96,7 @@ public class RegionListener extends Listener {
     @EventHandler
     private void playerFillBucket(PlayerBucketFillEvent event) {
         Location location = event.getBlockClicked().getLocation();
-        Optional<Region> region = regionsDatabase.getRegion(location);
+        Optional<Region> region = regionDatabase.getRegion(location);
         if (region.isEmpty()) {
             return;
         }
@@ -111,7 +111,7 @@ public class RegionListener extends Listener {
     @EventHandler
     private void playerEmptyBucket(PlayerBucketEmptyEvent event) {
         Location location = event.getBlockClicked().getLocation();
-        Optional<Region> region = regionsDatabase.getRegion(location);
+        Optional<Region> region = regionDatabase.getRegion(location);
         if (region.isEmpty()) {
             return;
         }
@@ -129,7 +129,7 @@ public class RegionListener extends Listener {
             return;
         }
 
-        Optional<Region> region = regionsDatabase.getRegion(damaged.getLocation());
+        Optional<Region> region = regionDatabase.getRegion(damaged.getLocation());
         if (region.isEmpty()) {
             return;
         }
@@ -147,7 +147,7 @@ public class RegionListener extends Listener {
             return;
         }
 
-        Optional<Region> region = regionsDatabase.getRegion(event.getEntity().getLocation());
+        Optional<Region> region = regionDatabase.getRegion(event.getEntity().getLocation());
         if (region.isEmpty()) {
             return;
         }
@@ -166,7 +166,7 @@ public class RegionListener extends Listener {
         }
 
         Location location = event.getClickedBlock().getLocation();
-        Optional<Region> region = regionsDatabase.getRegion(location);
+        Optional<Region> region = regionDatabase.getRegion(location);
         if (region.isEmpty()) {
             return;
         }
@@ -183,7 +183,7 @@ public class RegionListener extends Listener {
     @EventHandler
     public void onBlockBurn(BlockBurnEvent event) {
         Location location = event.getBlock().getLocation();
-        Optional<Region> region = regionsDatabase.getRegion(location);
+        Optional<Region> region = regionDatabase.getRegion(location);
         if (region.isEmpty()) {
             return;
         }
@@ -198,7 +198,7 @@ public class RegionListener extends Listener {
     @EventHandler
     public void onBlockIgnite(BlockIgniteEvent event) {
         Location location = event.getBlock().getLocation();
-        Optional<Region> region = regionsDatabase.getRegion(location);
+        Optional<Region> region = regionDatabase.getRegion(location);
         if (region.isEmpty()) {
             return;
         }
@@ -213,7 +213,7 @@ public class RegionListener extends Listener {
     @EventHandler
     public void onFireSpreadBlock(BlockSpreadEvent event) {
         Location location = event.getBlock().getLocation();
-        Optional<Region> region = regionsDatabase.getRegion(location);
+        Optional<Region> region = regionDatabase.getRegion(location);
         if (region.isEmpty()) {
             return;
         }
@@ -228,7 +228,7 @@ public class RegionListener extends Listener {
     @EventHandler
     public void onDestroyBlockByWaterOrLava(BlockFromToEvent event) {
         Location location = event.getToBlock().getLocation();
-        Optional<Region> region = regionsDatabase.getRegion(location);
+        Optional<Region> region = regionDatabase.getRegion(location);
         if (region.isPresent()) {
             if (!region.get().can(RegionRuleType.CAN_LIQUID_SPREAD)) {
                 event.setCancelled(true);
@@ -236,7 +236,7 @@ public class RegionListener extends Listener {
         }
 
         location = event.getBlock().getLocation();
-        region = regionsDatabase.getRegion(location);
+        region = regionDatabase.getRegion(location);
         if (region.isPresent()) {
             if (!region.get().can(RegionRuleType.CAN_LIQUID_SPREAD)) {
                 event.setCancelled(true);
@@ -249,7 +249,7 @@ public class RegionListener extends Listener {
         List<Block> blocksWithoutRegion = new ArrayList<>();
         for (Block block : event.blockList()) {
             Location location = block.getLocation();
-            Optional<Region> region = regionsDatabase.getRegion(location);
+            Optional<Region> region = regionDatabase.getRegion(location);
             if (region.isEmpty()) {
                 blocksWithoutRegion.add(block);
                 continue;

@@ -19,6 +19,11 @@ import com.github.thiskarolgajda.op.plots.warp.PlotWarp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import me.opkarol.oplibrary.database.DatabaseEntity;
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -50,5 +55,30 @@ public class Plot implements DatabaseEntity<UUID> {
     @Override
     public UUID getId() {
         return plotId;
+    }
+
+    public boolean canLocationBeHome(@NotNull Location location) {
+        Chunk chunk = location.getChunk();
+        return region.containsChunk(chunk);
+    }
+
+    public boolean isOwner(UUID uuid) {
+        return ownerId.equals(uuid);
+    }
+
+    public boolean isMember(UUID uuid) {
+        return members.getMembers().stream().anyMatch(member -> member.uuid().equals(uuid));
+    }
+
+    public boolean isAdded(UUID uuid) {
+        return isOwner(uuid) || isMember(uuid);
+    }
+
+    public OfflinePlayer getOwner() {
+        return Bukkit.getOfflinePlayer(ownerId);
+    }
+
+    public boolean isIgnored(UUID uuid) {
+        return ignored.getIgnored().contains(uuid);
     }
 }

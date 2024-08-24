@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class RegionsDatabase extends Database<String, Region> {
+public class RegionDatabase extends Database<String, Region> {
 
-    public RegionsDatabase() {
+    public RegionDatabase() {
         super(Region.class, Region[].class);
     }
 

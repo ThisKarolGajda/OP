@@ -29,7 +29,6 @@ public final class Region implements DatabaseEntity<String> {
     private String parentRegion;
     private final Map<RegionRoleType, PlayerRegionRules> playerRules;
     private final RegionRules regionRules;
-    @Getter
     @Setter
     private String data;
 
@@ -45,8 +44,24 @@ public final class Region implements DatabaseEntity<String> {
         this.owner = owner;
     }
 
+    public Region(String parentRegion, int chunkX, int chunkZ) {
+        this.chunkX = chunkX;
+        this.chunkZ = chunkZ;
+
+        // TODO: add default rules
+        playerRules = new HashMap<>();
+        this.regionRules = new RegionRules(new HashSet<>());
+
+        players = new HashSet<>();
+        this.parentRegion = parentRegion;
+    }
+
     public Region(UUID owner, @NotNull Location location) {
         this(owner, location.getChunk().getX(), location.getChunk().getZ());
+    }
+
+    public Region(String parentRegion, @NotNull Location location) {
+        this(parentRegion, location.getChunk().getX(), location.getChunk().getZ());
     }
 
     public Set<UUID> getPlayers() {
@@ -98,7 +113,7 @@ public final class Region implements DatabaseEntity<String> {
     }
 
     public Region getParentRegion() {
-        return Plugin.get(RegionsDatabase.class).getUnsafe(parentRegion);
+        return Plugin.get(RegionDatabase.class).getUnsafe(parentRegion);
     }
 
     public Map<RegionRoleType, PlayerRegionRules> getPlayerRules() {
@@ -151,7 +166,7 @@ public final class Region implements DatabaseEntity<String> {
         }
 
         this.playerRules.put(roleType, rules);
-        Plugin.get(RegionsDatabase.class).save(this);
+        Plugin.get(RegionDatabase.class).save(this);
     }
 
     public UUID getOwner() {
@@ -161,6 +176,15 @@ public final class Region implements DatabaseEntity<String> {
         }
 
         return owner;
+    }
+
+    public String getData() {
+        Region parentRegion = getParentRegion();
+        if (parentRegion != null) {
+            return parentRegion.getData();
+        }
+
+        return data;
     }
 
     public @NotNull String getPlayerNames() {

@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-import static com.github.thiskarolgajda.op.plots.blocklimits.PlotBlockConfig.*;
+import static com.github.thiskarolgajda.op.plots.blocklimits.PlotBlockLimitConfig.*;
 
 @Getter
 public enum PlotBlockLimitType {

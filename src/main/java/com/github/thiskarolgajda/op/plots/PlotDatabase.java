@@ -1,19 +1,20 @@
 package com.github.thiskarolgajda.op.plots;
 
 import com.github.thiskarolgajda.op.region.Region;
-import com.github.thiskarolgajda.op.region.RegionsDatabase;
+import com.github.thiskarolgajda.op.region.RegionDatabase;
 import me.opkarol.oplibrary.database.manager.Database;
 import me.opkarol.oplibrary.injection.Inject;
 import me.opkarol.oplibrary.location.OpLocation;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class PlotDatabase extends Database<UUID, Plot> {
     @Inject
-    private static RegionsDatabase regionsDatabase;
+    private static RegionDatabase regionDatabase;
 
     public PlotDatabase() {
         super(Plot.class, Plot[].class);
@@ -24,7 +25,7 @@ public class PlotDatabase extends Database<UUID, Plot> {
     }
 
     public Optional<Plot> getPlot(Location location) {
-        Optional<Region> optionalRegion = regionsDatabase.getRegion(location);
+        Optional<Region> optionalRegion = regionDatabase.getRegion(location);
         if (optionalRegion.isEmpty()) {
             return Optional.empty();
         }
@@ -39,8 +40,22 @@ public class PlotDatabase extends Database<UUID, Plot> {
         return get(uuid);
     }
 
+    public UUID getUnusedUUID() {
+        UUID uuid;
+
+        do {
+            uuid = UUID.randomUUID();
+        } while (contains(uuid));
+
+        return uuid;
+    }
+
     @Override
     public boolean useMultiFilesForJSON() {
         return true;
+    }
+
+    public List<Plot> getPlots(UUID uuid) {
+        return getAll().stream().filter(plot -> plot.isOwner(uuid)).toList();
     }
 }

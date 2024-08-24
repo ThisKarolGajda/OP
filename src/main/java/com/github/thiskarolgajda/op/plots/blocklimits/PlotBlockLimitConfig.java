@@ -6,8 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-@Config(path = "plot.block.limit.type")
-public class PlotBlockConfig {
+@Config(path = "plot.block.blocklimit.type")
+public class PlotBlockLimitConfig {
 
     @Config
     public static Map<String, Object> redstone = getDefaultObject("Czerwony kamień", 1, 50);
