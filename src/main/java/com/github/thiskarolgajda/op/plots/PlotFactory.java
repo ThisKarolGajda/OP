@@ -19,7 +19,7 @@ import com.github.thiskarolgajda.op.plots.warp.PlotWarp;
 import com.github.thiskarolgajda.op.region.Region;
 import com.github.thiskarolgajda.op.region.RegionDatabase;
 import lombok.Getter;
-import me.opkarol.oplibrary.injection.config.Config;
+import me.opkarol.oplibrary.injection.Inject;
 import me.opkarol.oplibrary.location.OpLocation;
 import me.opkarol.oplibrary.misc.Tuple;
 import org.bukkit.Chunk;
@@ -36,9 +36,9 @@ import static com.github.thiskarolgajda.op.plots.config.PlotConfig.*;
 import static com.github.thiskarolgajda.op.utils.RandomItemCollector.random;
 
 public class PlotFactory {
-    @Config
+    @Inject
     private static RegionDatabase regionDatabase;
-    @Config
+    @Inject
     private static PlotDatabase plotDatabase;
 
     public static @NotNull Tuple<PlotCreationResponse, Plot> createPlot(@NotNull Player player) {
@@ -49,15 +49,17 @@ public class PlotFactory {
         }
 
         int maxPlots = getMaxPlots(player);
-        int plots = plotDatabase.getPlots(player.getUniqueId()).size();
-        if (plots + 1 > maxPlots) {
+        int plots = plotDatabase.getOwnerPlots(player.getUniqueId()).size();
+        if (maxPlots != -1 && plots + 1 > maxPlots) {
             return Tuple.of(PlotCreationResponse.REACHED_MAX_PLOTS_LIMIT, null);
         }
 
         UUID plotId = plotDatabase.getUnusedUUID();
         Region centerRegion = createPlotDefaultRegion(player.getUniqueId(), plotId, location);
 
-        Plot plot = new Plot(plotId, generateRandomPlotName(player.getName()), new PlotWarp(), player.getUniqueId(), LocalDateTime.now(), new PlotExpiration(), new PlotMembers(), new PlotIgnored(), new PlotHomes(new OpLocation(location)), new PlotEffects(), new PlotBorder(), new PlotUpgrades(), new PlotSettings(), new PlotBlockLimits(), new PlotBlockCounter(), new PlotHologram(), new PlotSpecials(), new PlotShopChests(), new PlotRegions(centerRegion), new PlotLogs());
+        String plotName = generateRandomPlotName(player.getName());
+        OpLocation plotLocation = new OpLocation(location);
+        Plot plot = new Plot(plotId, plotName, new PlotWarp(plotName, plotLocation), player.getUniqueId(), LocalDateTime.now(), new PlotExpiration(), new PlotMembers(), new PlotIgnored(), new PlotHomes(plotLocation), new PlotEffects(), new PlotBorder(), new PlotUpgrades(), new PlotSettings(), new PlotBlockLimits(), new PlotBlockCounter(), new PlotHologram(), new PlotSpecials(), new PlotShopChests(), new PlotRegions(centerRegion), new PlotLogs());
         plotDatabase.save(plot);
         return Tuple.of(PlotCreationResponse.SUCCESS, plot);
     }

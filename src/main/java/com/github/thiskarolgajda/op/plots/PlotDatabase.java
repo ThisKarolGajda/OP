@@ -8,6 +8,7 @@ import me.opkarol.oplibrary.location.OpLocation;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -55,7 +56,41 @@ public class PlotDatabase extends Database<UUID, Plot> {
         return true;
     }
 
-    public List<Plot> getPlots(UUID uuid) {
+    public List<Plot> getOwnerPlots(UUID uuid) {
         return getAll().stream().filter(plot -> plot.isOwner(uuid)).toList();
+    }
+
+    public List<Plot> getAddedPlots(UUID uuid) {
+        return getAll().stream().filter(plot -> plot.isAdded(uuid)).toList();
+    }
+
+    /**
+     * Retrieves a Plot from the block counter leaderboard based on the specified position.
+     * The leaderboard is sorted in descending order of total block value.
+     *
+     * @param position The position in the leaderboard to retrieve the Plot from.
+     *                 Must be a positive integer.
+     * @return The Plot at the specified position in the leaderboard, or null if the
+     * position exceeds the number of available plots.
+     * @throws IllegalArgumentException if the position is invalid (less than 1).
+     */
+    public @Nullable Plot getPlotInBlockCounterLeaderboard(int position) {
+        List<Plot> plots = getAll();
+
+        plots.sort((plot1, plot2) -> {
+            int totalValue1 = plot1.getBlockCounter().getTotalValue();
+            int totalValue2 = plot2.getBlockCounter().getTotalValue();
+            return Integer.compare(totalValue2, totalValue1);
+        });
+
+        if (position > plots.size()) {
+            return null;
+        }
+
+        if (position < 1) {
+            throw new IllegalArgumentException("Invalid position: " + position);
+        }
+
+        return plots.get(position - 1);
     }
 }

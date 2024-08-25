@@ -9,11 +9,9 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public class PlotEffectsChangeCurrentEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-    private final String regionName;
     private final Plot plot;
 
-    public PlotEffectsChangeCurrentEvent(String regionName, Plot plot) {
-        this.regionName = regionName;
+    public PlotEffectsChangeCurrentEvent(Plot plot) {
         this.plot = plot;
     }
 

@@ -2,11 +2,15 @@ package com.github.thiskarolgajda.op.plots.expiration;
 
 import com.github.thiskarolgajda.op.plots.Plot;
 import com.github.thiskarolgajda.op.plots.PlotDatabase;
+import com.github.thiskarolgajda.op.plots.PlotDeleter;
 import me.opkarol.oplibrary.Plugin;
 import me.opkarol.oplibrary.injection.Inject;
 import me.opkarol.oplibrary.runnable.OpRunnable;
+import me.opkarol.oplibrary.tools.FormatTool;
 import me.opkarol.oplibrary.tools.TimeUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
@@ -14,6 +18,9 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+
+import static me.opkarol.oplibrary.translations.Messages.getTranslation;
+import static me.opkarol.oplibrary.translations.Messages.sendMessage;
 
 public class PlotExpirationManager {
     @Inject
@@ -78,14 +85,14 @@ public class PlotExpirationManager {
 
     private void removePlot(Plot plot) {
         //TODO: sendPlotExpiredWebhook(plot);
-//        PlotDeleter.removePlot(plot);
-//        String message = FormatTool.formatMessage(getTranslation("plot.expired").replace("%location%", plot.getStartHomeFamilyLocation()));
-//        for (Player player : Bukkit.getOnlinePlayers()) {
-//            player.sendMessage(message);
-//        }
-//
-//        if (plot.getOwner().getPlayer() != null) {
-//            sendMessage("plot.yourPlotExpired", plot.getOwner().getPlayer());
-//        }
+        PlotDeleter.deletePlot(plot);
+        String message = FormatTool.formatMessage(getTranslation("plot.expired").replace("%location%", plot.getHomes().getFirstHome().getLocation().toFamilyStringWithoutWorld()));
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendMessage(message);
+        }
+
+        if (plot.getOwner().getPlayer() != null) {
+            sendMessage("plot.yourPlotExpired", plot.getOwner().getPlayer());
+        }
     }
 }

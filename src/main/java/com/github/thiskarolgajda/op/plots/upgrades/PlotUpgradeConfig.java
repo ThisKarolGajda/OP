@@ -26,7 +26,7 @@ public class PlotUpgradeConfig {
     @Contract(value = "_, _ -> new", pure = true)
     private static @NotNull Map<String, Object> getObject(int limitLevel, double costPerLevel) {
         return Map.of(
-                "limitLevel", limitLevel,
+                "levelLimit", limitLevel,
                 "costPerLevel", costPerLevel
         );
     }

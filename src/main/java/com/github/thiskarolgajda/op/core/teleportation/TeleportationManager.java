@@ -3,7 +3,9 @@ package com.github.thiskarolgajda.op.core.teleportation;
 import com.github.thiskarolgajda.op.core.user.homes.UserHome;
 import com.github.thiskarolgajda.op.core.warps.Warp;
 import com.github.thiskarolgajda.op.permission.PermissionType;
+import com.github.thiskarolgajda.op.plots.Plot;
 import com.github.thiskarolgajda.op.plots.homes.PlotHome;
+import com.github.thiskarolgajda.op.plots.warp.PlotWarp;
 import me.opkarol.oplibrary.Plugin;
 import me.opkarol.oplibrary.injection.messages.StringMessage;
 import me.opkarol.oplibrary.listeners.Listener;
@@ -58,6 +60,22 @@ public class TeleportationManager extends Listener {
 
     public static void teleport(Player player, Location location, String teleportationName) {
         teleport(player, location, canSkipCooldown(player), teleportationName);
+    }
+
+    public static void teleport(Player player, @NotNull Plot plot) {
+        teleport(player, plot.getHomes().getFirstHome().getLocation().getLocation(), plot.getName());
+    }
+
+    public static void teleport(Player player, @NotNull PlotHome home) {
+        teleport(player, home.getLocation().getLocation(), home.getName());
+    }
+
+    public static void teleport(Player player, @NotNull UserHome home) {
+        teleport(player, home.getLocation().getLocation(), home.getName());
+    }
+
+    public static void teleport(Player player, @NotNull PlotWarp warp) {
+        teleport(player, warp.getLocation().getLocation(), warp.getName());
     }
 
     private static boolean canSkipCooldown(@NotNull Player player) {
@@ -212,26 +230,6 @@ public class TeleportationManager extends Listener {
     public static boolean denyTpaRequest(@NotNull Player player) {
         return latestTpaRequests.remove(player.getUniqueId()) != null;
     }
-
-//    public static void teleportToPlotWarp(Player player, @NotNull Plot plot) {
-//        teleport(player, plot.getWarp().getLocation().getLocation(), plot.getWarp().getName());
-//    }
-//
-//    public static void teleport(Player player, @NotNull Plot plot) {
-//        teleport(player, plot.getStartHomeLocation().getLocation(), plot.getName());
-//    }
-
-    public static void teleport(Player player, @NotNull PlotHome home) {
-        teleport(player, home.getLocation().getLocation(), home.getName());
-    }
-
-    public static void teleport(Player player, @NotNull UserHome home) {
-        teleport(player, home.getLocation().getLocation(), home.getName());
-    }
-
-//    public static void teleport(Player player, @NotNull PlotWarp warp) {
-//        teleport(player, warp.getLocation().getLocation(), warp.getName());
-//    }
 
     @EventHandler
     public void onPlayerMove(@NotNull PlayerMoveEvent event) {

@@ -10,13 +10,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.github.thiskarolgajda.op.plots.config.PlotConfig.defaultPlotHomeLimit;
+import static com.github.thiskarolgajda.op.plots.config.PlotConfig.defaultPlotHouseName;
+
 @Getter
 @Config(path = "plot")
 public class PlotHomes {
-    @Config
-    public static int defaultPlotHomeLimit = 1;
-    @Config
-    public static String defaultPlotHouseName = "Dom";
     private List<PlotHome> homes;
     @Setter
     private int homesLimit;

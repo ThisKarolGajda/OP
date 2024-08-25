@@ -2,9 +2,11 @@ package com.github.thiskarolgajda.op.region;
 
 import me.opkarol.oplibrary.database.manager.Database;
 import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class RegionDatabase extends Database<String, Region> {
@@ -16,7 +18,7 @@ public class RegionDatabase extends Database<String, Region> {
     public List<Region> getChildren(Region region) {
         final List<Region> children = new ArrayList<>();
         for (Region child : getAll()) {
-            if (child.getParentRegion().equals(region)) {
+            if (Objects.equals(child.getParentRegionId(), region.getId())) {
                 children.add(child);
             }
         }
@@ -38,6 +40,15 @@ public class RegionDatabase extends Database<String, Region> {
 
     public boolean containsRegion(Location location) {
         return containsRegion(location.getChunk().getX(), location.getChunk().getZ());
+    }
+
+    public void delete(@NotNull Region region) {
+        List<Region> children = getChildren(region);
+        for (Region child : children) {
+            delete(child);
+        }
+
+        super.delete(region);
     }
 
     @Override
