@@ -36,6 +36,8 @@ public class PlotConfig {
     public static String defaultPlotWarpName = "Warp %plot%";
     @Config
     public static int startPlotMaxMembers = 3;
+    @Config
+    public static int costForAnimalType = 1000;
 
     public static StringMessage createdPlot = StringMessage.arg("Stworzono działkę %name%", object -> Map.of("%name%", object.toString()));
     public static StringMessage invalidPlotLocation = new StringMessage("Nieprawidłowa lokalizacja działki. Użyj /dzialka wyszukaj, aby znaleźć wolne miejsce!");

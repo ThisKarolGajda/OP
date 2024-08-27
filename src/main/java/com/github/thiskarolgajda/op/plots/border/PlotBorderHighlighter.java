@@ -1,5 +1,6 @@
-package com.github.thiskarolgajda.op.plots;
+package com.github.thiskarolgajda.op.plots.border;
 
+import com.github.thiskarolgajda.op.plots.Plot;
 import me.opkarol.oplibrary.runnable.OpTimerRunnable;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -10,7 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class PlotHighlighter {
+public class PlotBorderHighlighter {
 
     public static @NotNull List<Location> getBorderLocations(List<Chunk> chunks) {
         Set<Location> locations = new HashSet<>();

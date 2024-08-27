@@ -1,8 +1,8 @@
 package com.github.thiskarolgajda.op.plots.settings;
 
-import com.github.thiskarolgajda.op.plots.settings.types.PlotSettingAnimalSpawn;
+import com.github.thiskarolgajda.op.plots.settings.animals.PlotSettingAnimalSpawn;
 import com.github.thiskarolgajda.op.plots.settings.daytime.PlotSettingDayType;
-import com.github.thiskarolgajda.op.plots.settings.types.PlotSettingMusic;
+import com.github.thiskarolgajda.op.plots.settings.music.PlotSettingMusic;
 import com.github.thiskarolgajda.op.plots.settings.weather.PlotSettingWeatherType;
 import lombok.Data;
 

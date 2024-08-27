@@ -13,19 +13,19 @@ import java.util.List;
 
 public class PlotDayTimeListener extends Listener {
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onRegionEntered(@NotNull PlayerEnterPlotEvent event) {
         Plot plot = event.getPlot();
         Player player = event.getPlayer();
         setPlayerDayTime(plot, player);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onRegionLeft(@NotNull PlayerLeavePlotEvent event) {
         event.getPlayer().resetPlayerTime();
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onSettingChange(@NotNull PlotDayChangedEvent event) {
         List<Player> players = PlotListener.getPlayersInsidePlot(event.getPlot());
         players.forEach(player -> setPlayerDayTime(event.getPlot(), player));

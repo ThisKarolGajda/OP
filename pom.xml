@@ -136,5 +136,11 @@
             <version>1.7</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.koca2000</groupId>
+            <artifactId>NoteBlockAPI</artifactId>
+            <version>1.6.2</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

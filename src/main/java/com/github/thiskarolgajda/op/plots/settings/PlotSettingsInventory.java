@@ -7,15 +7,20 @@ import com.github.thiskarolgajda.op.plots.border.BorderChangeInventory;
 import com.github.thiskarolgajda.op.plots.border.PlotBorder;
 import com.github.thiskarolgajda.op.plots.inventories.PlotMainInventory;
 import com.github.thiskarolgajda.op.plots.listener.PlotListener;
+import com.github.thiskarolgajda.op.plots.settings.animals.PlotSettingAnimalInventory;
 import com.github.thiskarolgajda.op.plots.settings.daytime.PlotDayChooseInventory;
+import com.github.thiskarolgajda.op.plots.settings.music.PlotSettingMusicInventory;
 import com.github.thiskarolgajda.op.plots.settings.weather.PlotWeatherChooseInventory;
 import com.github.thiskarolgajda.op.utils.HeadsType;
 import me.opkarol.oplibrary.Plugin;
 import me.opkarol.oplibrary.injection.messages.StringMessage;
 import me.opkarol.oplibrary.inventories.ChestInventory;
+import me.opkarol.oplibrary.inventories.ItemBuilder;
 import me.opkarol.oplibrary.misc.StringIconUtil;
 import me.opkarol.oplibrary.tools.Heads;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -46,11 +51,21 @@ public class PlotSettingsInventory extends ChestInventory {
             new PlotDayChooseInventory(player, plot);
         }, Map.of("%setting%", plot.getSettings().getSelectedDayType().getName()));
 
+        setItem(item("Zmień naturalny respawn zwierząt", List.of("Wyłączony respawn: %amount% zwierząt")), 12, new ItemBuilder(Material.COW_SPAWN_EGG), event -> {
+            event.setCancelled(true);
+            new PlotSettingAnimalInventory(player, plot);
+        }, Map.of("%amount%", String.valueOf(plot.getSettings().getAnimalSpawn().getDisabledSpawns().size())));
+
         PlotBorder border = plot.getBorder();
         setItem(item("Zmień granice", List.of("Pokazywanie granicy na działce: %showing_border%", "Kolor granicy właściciela: %owner_color%", "Kolor granicy członka: %added_color%", "Kolor granicy gościa: %color%", "Kolor granicy ignorowanego: %ignored_color%")), 13, Heads.get("7c373b60c4804e8f851ba8829bc0250f2db03d5d9e9a010cc03a2d255ad7fc15"), event -> {
             event.setCancelled(true);
             new BorderChangeInventory(player, plot);
         }, Map.of("%showing_border%", StringIconUtil.getReturnedEmojiFromBoolean(border.isDisplayBorderInsidePlot()), "%owner_color%", "#<" + border.getOwnerColorHex() + ">&m---------", "%added_color%", "#<" + border.getMemberColorHex() + ">&m---------", "%color%", "#<" + border.getNormalColorHex() + ">&m---------", "%ignored_color%", "#<" + border.getIgnoredColorHex() + ">&m---------"));
+
+        setItem(item("Zmień muzykę", List.of("Aktywna muzyka: %music%")), 14, new ItemBuilder(Material.MUSIC_DISC_BLOCKS).setFlags(ItemFlag.values()), event -> {
+            event.setCancelled(true);
+            new PlotSettingMusicInventory(player, plot);
+        }, Map.of("%music%", plot.getSettings().getMusic().getSelectedSongName()));
 
         setItem(item("Zmień pvp", List.of("Włączone: %enabled%", "PVP na działce można włączyć, gdy działka nie ma aktywnego warpu, nie ma włączonego latania i w danym momencie nie ma żadnego innego gracza na działce!")), 15, Heads.get("1765341353c029e9b655f4f57931ae6adc2c7a73c657945d945a307641d3778"), event -> {
             event.setCancelled(true);

@@ -2,7 +2,7 @@ package com.github.thiskarolgajda.op.plots.inventories;
 
 import com.github.thiskarolgajda.op.permission.PermissionType;
 import com.github.thiskarolgajda.op.plots.Plot;
-import com.github.thiskarolgajda.op.plots.PlotHighlighter;
+import com.github.thiskarolgajda.op.plots.border.PlotBorderHighlighter;
 import com.github.thiskarolgajda.op.plots.blockcounter.PlotBlockCounterInventory;
 import com.github.thiskarolgajda.op.plots.blocklimits.PlotBlockLimitsInventory;
 import com.github.thiskarolgajda.op.plots.effects.PlotEffectsInventory;
@@ -114,7 +114,7 @@ public class PlotMainInventory extends ChestInventory {
     private void setShowBorders(@NotNull Plot plot, Player player) {
         setItem(item("Pokaż granice działki", getLore("Wyświetl na 10 sekund granicę swojej działki!", "wyświetlić granice")), 29, Heads.get("7c373b60c4804e8f851ba8829bc0250f2db03d5d9e9a010cc03a2d255ad7fc15"), event -> {
             event.setCancelled(true);
-            PlotHighlighter.highlight(plot, List.of(player), 10);
+            PlotBorderHighlighter.highlight(plot, List.of(player), 10);
             player.closeInventory();
         }, Map.of("%available%", plot.getAvailableFeature(player, PlotPermissionsType.DISPLAY_BORDER)));
     }

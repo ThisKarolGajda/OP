@@ -15,19 +15,19 @@ import java.util.List;
 
 public class PlotWeatherListener extends Listener {
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onRegionEntered(@NotNull PlayerEnterPlotEvent event) {
         Plot plot = event.getPlot();
         Player player = event.getPlayer();
         setPlayerWeather(plot, player);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onRegionLeft(@NotNull PlayerLeavePlotEvent event) {
         event.getPlayer().resetPlayerWeather();
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onSettingChange(@NotNull PlotDayChangedEvent event) {
         List<Player> players = PlotListener.getPlayersInsidePlot(event.getPlot());
         players.forEach(player -> setPlayerWeather(event.getPlot(), player));

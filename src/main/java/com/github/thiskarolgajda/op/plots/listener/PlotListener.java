@@ -2,7 +2,7 @@ package com.github.thiskarolgajda.op.plots.listener;
 
 import com.github.thiskarolgajda.op.plots.Plot;
 import com.github.thiskarolgajda.op.plots.PlotDatabase;
-import com.github.thiskarolgajda.op.plots.PlotHighlighter;
+import com.github.thiskarolgajda.op.plots.border.PlotBorderHighlighter;
 import com.github.thiskarolgajda.op.region.events.RegionEnterEvent;
 import com.github.thiskarolgajda.op.region.events.RegionEventListener;
 import com.github.thiskarolgajda.op.region.events.RegionLeaveEvent;
@@ -11,6 +11,7 @@ import me.opkarol.oplibrary.injection.Inject;
 import me.opkarol.oplibrary.listeners.Listener;
 import me.opkarol.oplibrary.wrappers.OpBossBar;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
@@ -35,7 +36,7 @@ public class PlotListener extends Listener {
                     }
 
                     if (plot.getBorder().isDisplayBorderInsidePlot()) {
-                        PlotHighlighter.highlight(plot, players, 1);
+                        PlotBorderHighlighter.highlight(plot, players, 1);
                     }
                 }
             }
@@ -60,6 +61,8 @@ public class PlotListener extends Listener {
                 if (event.getEnterType() == RegionEnterEvent.RegionEnterType.MOVE) {
                     pushPlayerBack(event.getPlayer());
                 }
+
+                return;
             }
 
             Bukkit.getPluginManager().callEvent(new PlayerEnterPlotEvent(event.getPlayer(), plot, event.getEnterType()));
@@ -76,6 +79,8 @@ public class PlotListener extends Listener {
                 if (event.getLeaveType() == RegionLeaveEvent.RegionLeaveType.MOVE) {
                     pushPlayerBack(event.getPlayer());
                 }
+
+                return;
             }
 
             Bukkit.getPluginManager().callEvent(new PlayerLeavePlotEvent(event.getPlayer(), plot, event.getLeaveType()));
@@ -84,12 +89,13 @@ public class PlotListener extends Listener {
 
     private void pushPlayerBack(Player player) {
         Plugin.run(() -> {
-            Vector direction = player.getLocation().getDirection();
+            Location location = player.getLocation();
+            Vector direction = location.getDirection();
             direction.setY(0);
             Vector reverseDirection = direction.multiply(-1).normalize();
             reverseDirection.setY(0.5);
             player.setVelocity(reverseDirection.multiply(1.5));
-            player.getWorld().createExplosion(player.getLocation(), 0F, false, false);
+            player.getWorld().createExplosion(location, 0F, false, false);
         });
     }
 }

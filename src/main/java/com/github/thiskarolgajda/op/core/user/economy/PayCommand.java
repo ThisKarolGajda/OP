@@ -3,7 +3,6 @@ package com.github.thiskarolgajda.op.core.user.economy;
 import me.opkarol.oplibrary.Plugin;
 import me.opkarol.oplibrary.commands.annotations.Command;
 import me.opkarol.oplibrary.commands.annotations.Default;
-import me.opkarol.oplibrary.commands.annotations.NoUse;
 import me.opkarol.oplibrary.misc.StringUtil;
 import me.opkarol.oplibrary.translations.Messages;
 import org.bukkit.OfflinePlayer;
@@ -52,10 +51,5 @@ public class PayCommand {
     @Default
     public void payCommand(Player player, OfflinePlayer target, String amountString) {
         pay(player, target, amountString);
-    }
-
-    @NoUse
-    public void noUse(Player player) {
-        Messages.sendMessage("commands.properUsage", player, Map.of("%usage%", "/przelej <GRACZ> <WARTOŚĆ>"));
     }
 }
