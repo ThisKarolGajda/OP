@@ -37,11 +37,10 @@ public class UserInviteDatabase extends Database<UUID, UserInvites> {
         save(userInvites);
     }
 
-    public void addPlotInvite(UUID senderUUID, UUID targetUUID, @NotNull UUID plotUUID) {
+    public void savePlotInvite(UUID senderUUID, UUID targetUUID, @NotNull UUID plotUUID) {
         UserInvite userInvite = new UserInvite(targetUUID, UserInviteType.PLOT_INVITE, plotUUID.toString(), senderUUID, LocalDateTime.now());
         Optional<UserInvites> optional = get(targetUUID);
-        UserInvites userInvites;
-        userInvites = optional.orElseGet(() -> new UserInvites(targetUUID));
+        UserInvites userInvites = optional.orElseGet(() -> new UserInvites(targetUUID));
         userInvites.addInvite(userInvite);
         save(userInvites);
 

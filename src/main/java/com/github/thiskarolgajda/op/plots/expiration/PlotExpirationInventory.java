@@ -51,7 +51,7 @@ public class PlotExpirationInventory extends ChestInventory {
         }, Map.of("%cost%", MoneyTextFormatter.format(expirationCostPerHour * 168)));
         setItem(item("Informacje", List.of("Pamiętaj o przedłużaniu! Jak nie przedłużysz, to twoja działka zostanie usunięta!", "Wygasa za: %expire_date%")), 16, new ItemBuilder(Material.ENCHANTED_BOOK), event -> event.setCancelled(true), Map.of("%expire_date%", plot.getExpiration().getTimeLeft()));
 
-        setItemHome(26, player, () -> new PlotMainInventory(plot, player));
+        setItemHome(22, player, () -> new PlotMainInventory(plot, player));
 
         fillEmptyWithBlank();
         open(player);

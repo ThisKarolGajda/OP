@@ -32,7 +32,7 @@ public class PlotHomesInventory extends ChestInventory {
     public PlotHomesInventory(Player player, Plot plot) {
         super(3, "Domy działki");
 
-        setItemHome(26, player, () -> new PlotMainInventory(plot, player));
+        setItemHome(22, player, () -> new PlotMainInventory(plot, player));
 
         PlotHomes homes = plot.getHomes();
         for (int i = 0; i < 3; i++) {

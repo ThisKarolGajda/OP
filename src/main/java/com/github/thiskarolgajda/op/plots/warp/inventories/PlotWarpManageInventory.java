@@ -26,7 +26,7 @@ public class PlotWarpManageInventory extends ChestInventory {
     public PlotWarpManageInventory(Player player, @NotNull Plot plot) {
         super(3, "plot_warp_manage");
 
-        setItemHome(26, player, () -> new PlotMainInventory(plot, player));
+        setItemHome(22, player, () -> new PlotMainInventory(plot, player));
 
         PlotWarp warp = plot.getWarp();
 

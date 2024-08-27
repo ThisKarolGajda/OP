@@ -19,7 +19,7 @@ public class PlotWarpInformationInventory extends ChestInventory {
             return;
         }
 
-        setItemHome(26, player, () -> new PlotWarpsInventory(player));
+        setItemHome(22, player, () -> new PlotWarpsInventory(player));
 
         setItem(item("teleport"), 11, Heads.get("c3a8e402dad1b7dad9aae6f4015932183429ce87bbbeced3119026f8296336c2"), event -> {
             event.setCancelled(true);

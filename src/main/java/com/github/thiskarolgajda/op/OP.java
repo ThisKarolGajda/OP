@@ -5,6 +5,7 @@ import com.github.thiskarolgajda.op.core.user.economy.UserEconomyManager;
 import com.github.thiskarolgajda.op.core.user.economy.VaultImpl;
 import com.github.thiskarolgajda.op.core.user.tags.UserTagsDatabase;
 import com.github.thiskarolgajda.op.core.warps.WarpsDatabase;
+import com.github.thiskarolgajda.op.core.warps.custom.SpawnWarp;
 import com.github.thiskarolgajda.op.plots.PlotDatabase;
 import com.github.thiskarolgajda.op.region.RegionListener;
 import com.github.thiskarolgajda.op.region.RegionDatabase;
@@ -31,6 +32,7 @@ public final class OP extends Plugin {
         return Map.of("%money%", object.toString());
     });
     public static StringMessage playerNotOnline = new StringMessage("Gracz nie jest na serwerze!");
+    public static StringMessage youCantUseThat = new StringMessage("Nie możesz tego zrobić!");
 
     @Override
     public void enable() {
@@ -47,6 +49,8 @@ public final class OP extends Plugin {
         DependencyInjection.registerInject(new UserTagsDatabase());
 
         DependencyInjection.registerInject(new PlotDatabase());
+
+        DependencyInjection.registerInject(new SpawnWarp());
     }
 
     private void setupEconomy() {

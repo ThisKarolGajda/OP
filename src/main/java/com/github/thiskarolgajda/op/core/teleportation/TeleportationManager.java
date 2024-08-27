@@ -54,6 +54,10 @@ public class TeleportationManager extends Listener {
         teleport(player, warp.getLocation().getLocation(), canSkipCooldown(player), warp.getName());
     }
 
+    public static void teleport(Player player, @NotNull Warp warp, boolean skipCooldown) {
+        teleport(player, warp.getLocation().getLocation(), skipCooldown, warp.getName());
+    }
+
     public static void teleport(Player player, Location location) {
         teleport(player, location, canSkipCooldown(player), null);
     }
@@ -176,11 +180,12 @@ public class TeleportationManager extends Listener {
             return;
         }
 
-        Plugin.runLater(() -> {
-            teleported.success(player);
-            player.teleport(location);
-            new OpParticle(Particle.EXPLOSION_EMITTER).display(player);
-        }, 1);
+        Plugin.run(() -> {
+            if (player.teleport(location)) {
+                teleported.success(player);
+                new OpParticle(Particle.EXPLOSION_EMITTER).display(player);
+            }
+        });
     }
 
     private static void loadChunkAt(Location location) {

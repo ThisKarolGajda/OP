@@ -8,6 +8,7 @@ import me.opkarol.oplibrary.injection.Inject;
 import org.bukkit.Chunk;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -19,6 +20,12 @@ public class PlotRegions {
 
     public List<Region> getChildrenRegions() {
         return database.getChildren(parentRegion);
+    }
+
+    public List<Chunk> getChildrenRegionChunks() {
+        return getChildrenRegions().stream()
+                .map(Region::getChunk)
+                .toList();
     }
 
     public List<Region> getRegions() {
@@ -34,5 +41,11 @@ public class PlotRegions {
 
     public boolean containsChunk(Chunk chunk) {
         return getRegions().stream().anyMatch(region -> region.getChunkX() == chunk.getX() && region.getChunkZ() == chunk.getZ());
+    }
+
+    public List<Chunk> getChunks() {
+        List<Chunk> chunks = new ArrayList<>(getChildrenRegionChunks());
+        chunks.add(parentRegion.getChunk());
+        return chunks;
     }
 }

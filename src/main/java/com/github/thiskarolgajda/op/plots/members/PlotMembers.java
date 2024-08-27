@@ -21,4 +21,12 @@ public class PlotMembers {
 
         return false;
     }
+
+    public void remove(UUID uuid) {
+        members.removeIf(member -> member.uuid().equals(uuid));
+    }
+
+    public void add(UUID uuid) {
+        members.add(new PlotMember(uuid, new HashSet<>(PlotPermissionsType.getDefaultPermissions())));
+    }
 }

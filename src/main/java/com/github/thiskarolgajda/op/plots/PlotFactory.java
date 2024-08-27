@@ -73,7 +73,7 @@ public class PlotFactory {
         int centerX = chunk.getX();
         int centerZ = chunk.getZ();
 
-        Region centerRegion = new Region(owner, centerX, centerZ);
+        Region centerRegion = new Region(center.getWorld().getName(), owner, centerX, centerZ);
         centerRegion.setData(plotId.toString());
         regionDatabase.save(centerRegion);
         for (int dx = -1; dx <= 1; dx++) {

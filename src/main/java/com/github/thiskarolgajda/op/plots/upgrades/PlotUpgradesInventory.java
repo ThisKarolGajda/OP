@@ -29,7 +29,7 @@ public class PlotUpgradesInventory extends ChestInventory {
         setUpgradeItem(player, plot, 15, "Ulepszenie rozwoju roślin", plotUpgrades, PlotUpgradeType.PLANTS_GROWTH);
         setUpgradeItem(player, plot, 16, "Ulepszenie ilości sklepów", plotUpgrades, PlotUpgradeType.SHOP_CHEST_LIMIT);
 
-        setItemHome(26, player, () -> new PlotMainInventory(plot, player));
+        setItemHome(22, player, () -> new PlotMainInventory(plot, player));
         fillEmptyWithBlank();
         open(player);
     }

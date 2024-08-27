@@ -17,6 +17,7 @@ import com.github.thiskarolgajda.op.plots.regions.PlotRegions;
 import com.github.thiskarolgajda.op.plots.settings.PlotSettings;
 import com.github.thiskarolgajda.op.plots.shopchests.PlotShopChests;
 import com.github.thiskarolgajda.op.plots.specials.PlotSpecials;
+import com.github.thiskarolgajda.op.plots.upgrades.PlotUpgradeType;
 import com.github.thiskarolgajda.op.plots.upgrades.PlotUpgrades;
 import com.github.thiskarolgajda.op.plots.warp.PlotWarp;
 import lombok.AllArgsConstructor;
@@ -34,6 +35,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.github.thiskarolgajda.op.plots.config.PlotConfig.startPlotMaxMembers;
 import static com.github.thiskarolgajda.op.utils.DateFormatter.STYLE_FORMATTER;
 
 @Data
@@ -109,13 +111,21 @@ public class Plot implements DatabaseEntity<UUID> {
         return StringIconUtil.getReturnedEmojiFromBoolean(isFeatureAvailable(player, permission));
     }
 
-    public boolean isFeatureAvailable(Player player, PlotPermissionsType permission) {
-        return PermissionType.ADMIN.hasPermission(player) ||
+    public boolean isFeatureAvailable(OfflinePlayer player, PlotPermissionsType permission) {
+        return !getSpecials().isAreAllRegionPermissionsDisabled() && (PermissionType.ADMIN.hasPermission(player) ||
                 isOwner(player.getUniqueId()) ||
-                getMembers().hasPermission(player.getUniqueId(), permission);
+                getMembers().hasPermission(player.getUniqueId(), permission));
     }
 
     public boolean isNameIllegal(String name) {
         return false; //fixme implement
+    }
+
+    public int getMaxPlayers() {
+        return upgrades.getLevel(PlotUpgradeType.PLAYER_LIMIT) + startPlotMaxMembers;
+    }
+
+    public boolean hasSpaceForNewMember() {
+        return members.getMembers().size() < getMaxPlayers();
     }
 }

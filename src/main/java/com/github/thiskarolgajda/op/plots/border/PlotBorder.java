@@ -1,8 +1,10 @@
 package com.github.thiskarolgajda.op.plots.border;
 
+import com.github.thiskarolgajda.op.plots.Plot;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Color;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
@@ -72,5 +74,21 @@ public class PlotBorder {
 
     private @NotNull String colorToHex(@NotNull Color color) {
         return String.format("%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue());
+    }
+
+    public Color getParticleColor(@NotNull Plot plot, @NotNull Player player) {
+        if (plot.isOwner(player.getUniqueId())) {
+            return getOwnerColor();
+        }
+
+        if (plot.isMember(player.getUniqueId())) {
+            return getMemberColor();
+        }
+
+        if (plot.isIgnored(player.getUniqueId())) {
+            return getIgnoredColor();
+        }
+
+        return getNormalColor();
     }
 }

@@ -14,7 +14,7 @@ public class HomeManageInventory extends ChestInventory {
     public HomeManageInventory(Player player, UserHome home) {
         super(3, "home_manage");
 
-        setItemHome(26, player, () -> new HomesInventory(player));
+        setItemHome(22, player, () -> new HomesInventory(player));
 
         UserHomes homes = Plugin.get(UserHomesDatabase.class).getSafe(player.getUniqueId());
 

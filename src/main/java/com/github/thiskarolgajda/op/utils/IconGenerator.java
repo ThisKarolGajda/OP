@@ -2,7 +2,10 @@ package com.github.thiskarolgajda.op.utils;
 
 import org.bukkit.Material;
 
+import java.util.Arrays;
 import java.util.Random;
+
+import static com.github.thiskarolgajda.op.utils.RandomItemCollector.random;
 
 public class IconGenerator {
 
@@ -31,5 +34,13 @@ public class IconGenerator {
         };
         Random random = new Random();
         return materials[random.nextInt(materials.length)];
+    }
+
+    public static Material getRandomBlock() {
+       return Arrays.stream(Material.values())
+               .filter(material -> !material.isLegacy())
+               .filter(Material::isItem)
+               .filter(Material::isBlock)
+               .collect(random());
     }
 }

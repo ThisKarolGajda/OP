@@ -32,13 +32,7 @@ public class PlotDatabase extends Database<UUID, Plot> {
         }
 
         Region region = optionalRegion.get();
-        String regionData = region.getData();
-        if (regionData == null || regionData.isEmpty()) {
-            return Optional.empty();
-        }
-
-        UUID uuid = UUID.fromString(regionData);
-        return get(uuid);
+        return getPlot(region);
     }
 
     public UUID getUnusedUUID() {
@@ -92,5 +86,19 @@ public class PlotDatabase extends Database<UUID, Plot> {
         }
 
         return plots.get(position - 1);
+    }
+
+    public Optional<Plot> getPlot(@NotNull Region region) {
+        String regionData = region.getData();
+        return getPlotFromRegionData(regionData);
+    }
+
+    public Optional<Plot> getPlotFromRegionData(String regionData) {
+        if (regionData == null || regionData.isEmpty()) {
+            return Optional.empty();
+        }
+
+        UUID uuid = UUID.fromString(regionData);
+        return get(uuid);
     }
 }

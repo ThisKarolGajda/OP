@@ -1,26 +1,14 @@
 package com.github.thiskarolgajda.op.plots.effects;
 
 import com.github.thiskarolgajda.op.plots.Plot;
+import com.github.thiskarolgajda.op.utils.OpEvent;
 import lombok.Getter;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Getter
-public class PlotEffectsChangeCurrentEvent extends Event {
-    private static final HandlerList handlers = new HandlerList();
+@RequiredArgsConstructor
+@Setter
+public class PlotEffectsChangeCurrentEvent extends OpEvent {
     private final Plot plot;
-
-    public PlotEffectsChangeCurrentEvent(Plot plot) {
-        this.plot = plot;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-    @Override
-    public @NotNull HandlerList getHandlers() {
-        return handlers;
-    }
 }
