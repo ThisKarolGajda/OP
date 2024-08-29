@@ -137,6 +137,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.joml</groupId>
+            <artifactId>joml</artifactId>
+            <version>1.10.5</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.koca2000</groupId>
             <artifactId>NoteBlockAPI</artifactId>
             <version>1.6.2</version>
