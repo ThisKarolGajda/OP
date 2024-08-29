@@ -7,7 +7,6 @@ import com.github.thiskarolgajda.op.core.user.tags.UserTagsDatabase;
 import com.github.thiskarolgajda.op.core.warps.WarpsDatabase;
 import com.github.thiskarolgajda.op.core.warps.custom.SpawnWarp;
 import com.github.thiskarolgajda.op.plots.PlotDatabase;
-import com.github.thiskarolgajda.op.region.RegionListener;
 import com.github.thiskarolgajda.op.region.RegionDatabase;
 import me.opkarol.oplibrary.Plugin;
 import me.opkarol.oplibrary.extensions.Vault;
@@ -37,7 +36,6 @@ public final class OP extends Plugin {
     @Override
     public void enable() {
         DependencyInjection.registerInject(new RegionDatabase());
-        DependencyInjection.registerInject(new RegionListener());
 
         DependencyInjection.registerInject(new UserEconomyManager());
 

@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +35,13 @@ public class PlotUpgradesInventory extends ChestInventory {
         open(player);
     }
 
-    private void setUpgradeItem(Player player, Plot plot, int slot, String name, PlotUpgrades plotUpgrades, PlotUpgradeType upgradeType) {
-        setItem(item(name, List.of("Obecny poziom: %current_level%", "Koszt na następny poziom: %cost_for_next_level%", "Obecna wartość: %value%")), slot, Heads.get(getHeadId(upgradeType)), event -> handleEventClick(event, plot, player, plotUpgrades, upgradeType), Map.of("%current_level%", String.valueOf(plotUpgrades.getLevel(upgradeType)), "%cost_for_next_level%", getCostForNextLevel(plot, plotUpgrades, upgradeType), "%value%", getUpgradeValue(plot, upgradeType)));
+    private void setUpgradeItem(Player player, Plot plot, int slot, String name, @NotNull PlotUpgrades plotUpgrades, @NotNull PlotUpgradeType upgradeType) {
+        List<String> lore = new ArrayList<>(List.of("Poziom: %current_level%/%max_level%", "Obecna wartość: %value%"));
+        if (upgradeType.getLevelLimit() != plotUpgrades.getLevel(upgradeType)) {
+            lore.add("Koszt na następny poziom: %cost_for_next_level%");
+        }
+
+        setItem(item(name, lore), slot, Heads.get(getHeadId(upgradeType)), event -> handleEventClick(event, plot, player, plotUpgrades, upgradeType), Map.of("%current_level%", String.valueOf(plotUpgrades.getLevel(upgradeType)), "%cost_for_next_level%", getCostForNextLevel(plot, plotUpgrades, upgradeType), "%value%", getUpgradeValue(plot, upgradeType), "%max_level%", String.valueOf(upgradeType.getLevelLimit())));
     }
 
     private String getHeadId(PlotUpgradeType upgradeType) {
@@ -49,18 +55,19 @@ public class PlotUpgradesInventory extends ChestInventory {
     }
 
     private String getUpgradeValue(Plot plot, PlotUpgradeType upgradeType) {
+        PlotUpgrade upgrade = plot.getUpgrades().get(upgradeType);
         return switch (upgradeType) {
-            case CHUNK_LIMIT, PLAYER_LIMIT, SHOP_CHEST_LIMIT ->
-                    String.valueOf(plot.getUpgrades().getLevel(upgradeType));
-            case ANIMALS_GROWTH -> getAnimalMatureTime(plot.getUpgrades().getLevel(PlotUpgradeType.ANIMALS_GROWTH));
-            case PLANTS_GROWTH -> String.valueOf(plot.getUpgrades().getLevel(PlotUpgradeType.PLANTS_GROWTH));
+            case CHUNK_LIMIT -> plot.getUpgrades().getLevel(upgradeType) + " chunków";
+            case PLAYER_LIMIT -> plot.getUpgrades().getLevel(upgradeType) + " członków działki";
+            case SHOP_CHEST_LIMIT -> plot.getUpgrades().getLevel(upgradeType) + " sklepów";
+            case ANIMALS_GROWTH -> getAnimalMatureTime(plot.getUpgrades().getLevel(upgradeType));
+            case PLANTS_GROWTH -> ((double) upgrade.getLevel() * 100d / upgrade.getLevelLimit()) + "% na zwiększenie plonu przy wzroście";
         };
     }
 
     private void handleEventClick(@NotNull InventoryClickEvent event, Plot plot, Player player, PlotUpgrades plotUpgrades, PlotUpgradeType type) {
         event.setCancelled(true);
         buyUpgrade(plot, player, plotUpgrades, type);
-        player.closeInventory();
         new PlotUpgradesInventory(player, plot);
     }
 
@@ -74,28 +81,14 @@ public class PlotUpgradesInventory extends ChestInventory {
     }
 
     private @NotNull String getAnimalMatureTime(int level) {
-        return switch (level) {
-            case 0 -> "20 min";
-            case 1 -> "18 min";
-            case 2 -> "16 min";
-            case 3 -> "14 min";
-            case 4 -> "12 min";
-            case 5 -> "10 min";
-            default -> throw new IllegalStateException("Unexpected value: " + level);
-        };
-    }
+        int maxLevel = PlotUpgradeType.ANIMALS_GROWTH.getLevelLimit();
+        double timeReductionPerLevel = (10) / (double) maxLevel;
+        double matureTime = 20 - (timeReductionPerLevel * level);
+        if (matureTime < 10) {
+            matureTime = 10;
+        }
 
-    private @NotNull String getPlotSizes(int level) {
-        return switch (level) {
-            case 0 -> "41x41";
-            case 1 -> "51x51";
-            case 2 -> "61x61";
-            case 3 -> "71x71";
-            case 4 -> "81x81";
-            case 5 -> "91x91";
-            case 6 -> "111x111";
-            default -> throw new IllegalStateException("Unexpected value: " + level);
-        };
+        return matureTime + " min na dorośnięcie";
     }
 
     private void buyUpgrade(Plot plot, Player player, @NotNull PlotUpgrades plotUpgrades, PlotUpgradeType type) {

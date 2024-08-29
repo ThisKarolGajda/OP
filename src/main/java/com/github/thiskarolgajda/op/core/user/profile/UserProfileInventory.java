@@ -30,7 +30,7 @@ import static me.opkarol.oplibrary.translations.Messages.sendMessage;
 public class UserProfileInventory extends ChestInventory {
 
     public UserProfileInventory(Player player, OfflinePlayer target) {
-        super(3, "Profil gracza " + player.getName());
+        super(3, "Profil gracza " + target.getName());
 
         UUID uuid = target.getUniqueId();
         UserTagType tag = Plugin.get(UserTagsDatabase.class).getSafe(uuid).getSelected();

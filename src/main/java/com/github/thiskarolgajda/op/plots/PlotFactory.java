@@ -18,10 +18,13 @@ import com.github.thiskarolgajda.op.plots.upgrades.PlotUpgrades;
 import com.github.thiskarolgajda.op.plots.warp.PlotWarp;
 import com.github.thiskarolgajda.op.region.Region;
 import com.github.thiskarolgajda.op.region.RegionDatabase;
+import com.github.thiskarolgajda.op.region.events.ExternalRegionEnterEvent;
+import com.github.thiskarolgajda.op.region.events.RegionEnterEvent;
 import lombok.Getter;
 import me.opkarol.oplibrary.injection.Inject;
 import me.opkarol.oplibrary.location.OpLocation;
 import me.opkarol.oplibrary.misc.Tuple;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -29,6 +32,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -59,8 +63,17 @@ public class PlotFactory {
 
         String plotName = generateRandomPlotName(player.getName());
         OpLocation plotLocation = new OpLocation(location);
-        Plot plot = new Plot(plotId, plotName, new PlotWarp(plotName, plotLocation), player.getUniqueId(), LocalDateTime.now(), new PlotExpiration(), new PlotMembers(), new PlotIgnored(), new PlotHomes(plotLocation), new PlotEffects(), new PlotBorder(), new PlotUpgrades(), new PlotSettings(), new PlotBlockLimits(), new PlotBlockCounter(), new PlotHologram(), new PlotSpecials(), new PlotShopChests(), new PlotRegions(centerRegion), new PlotLogs());
+        Plot plot = new Plot(plotId, plotName, new PlotWarp(plotName, plotLocation), player.getUniqueId(), LocalDateTime.now(), new PlotExpiration(), new PlotMembers(), new PlotIgnored(), new PlotHomes(plotLocation), new PlotEffects(), new PlotBorder(), new PlotUpgrades(), new PlotSettings(), new PlotBlockLimits(), new PlotBlockCounter(), new PlotHologram(), new PlotSpecials(), new PlotShopChests(), new PlotRegions(centerRegion.getId()), new PlotLogs());
         plotDatabase.save(plot);
+
+        List<Chunk> chunkList = plot.getRegion().getChunks();
+        for (Player player1 : Bukkit.getOnlinePlayers()) {
+            Chunk playerChunk = player1.getLocation().getChunk();
+            if (chunkList.contains(playerChunk)) {
+                Bukkit.getPluginManager().callEvent(new ExternalRegionEnterEvent(centerRegion, player1, RegionEnterEvent.RegionEnterType.MOVE));
+            }
+        }
+
         return Tuple.of(PlotCreationResponse.SUCCESS, plot);
     }
 

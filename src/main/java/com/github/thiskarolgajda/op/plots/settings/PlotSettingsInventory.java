@@ -11,6 +11,7 @@ import com.github.thiskarolgajda.op.plots.settings.animals.PlotSettingAnimalInve
 import com.github.thiskarolgajda.op.plots.settings.daytime.PlotDayChooseInventory;
 import com.github.thiskarolgajda.op.plots.settings.music.PlotSettingMusicInventory;
 import com.github.thiskarolgajda.op.plots.settings.weather.PlotWeatherChooseInventory;
+import com.github.thiskarolgajda.op.region.inventory.RegionPlayerRoleSelectInventory;
 import com.github.thiskarolgajda.op.utils.HeadsType;
 import me.opkarol.oplibrary.Plugin;
 import me.opkarol.oplibrary.injection.formatter.LoreBuilder;
@@ -41,6 +42,12 @@ public class PlotSettingsInventory extends ChestInventory {
     public PlotSettingsInventory(Player player, Plot plot) {
         super(3, "Ustawienia działki");
         setItemHome(22, player, () -> new PlotMainInventory(plot, player));
+
+        setItem(item("Zmień zasady graczy na regionie", List.of("Zaawansowana opcja! Jeśli nie wiesz co robisz, lepiej tutaj nie wchodź. Możesz przypadkowo włączyć opcję niszczenia/stawiania bloków przez gości!")), 9, HeadsType.VILLAGE.getHead(), event -> {
+            event.setCancelled(true);
+            new RegionPlayerRoleSelectInventory(player, plot.getRegion().getParentRegion(), () -> new PlotSettingsInventory(player, plot));
+        });
+
         setItem(item("Zmień pogodę", List.of("Wybrana pogoda: %setting%", "Uwaga: to jest efekt czysto kosmetyczny, nie ma on wpływu na respawn zwierząt czy inne mechaniki, które podlegają serwerowi!")), 10, Heads.get("c465c121958c0522e3dccb3d14d68612d6317cd380b0e646b61b7420b904af02"), event -> {
             event.setCancelled(true);
             new PlotWeatherChooseInventory(player, plot);
@@ -57,10 +64,10 @@ public class PlotSettingsInventory extends ChestInventory {
         }, Map.of("%amount%", String.valueOf(plot.getSettings().getAnimalSpawn().getDisabledSpawns().size())));
 
         PlotBorder border = plot.getBorder();
-        setItem(item("Zmień granice", LoreBuilder.create("Pokazywanie granicy na działce: %showing_border%", "Kolor granicy właściciela: %owner_color%", "Kolor granicy członka: %added_color%", "Kolor granicy gościa: %color%", "Kolor granicy ignorowanego: %ignored_color%").anyMouseButtonText("przejść do konfiguracji granicy")), 13, Heads.get("7c373b60c4804e8f851ba8829bc0250f2db03d5d9e9a010cc03a2d255ad7fc15"), event -> {
+        setItem(item("Zmień granicę", LoreBuilder.create("Pokazywanie granicy na działce: %showing_border%", "Kolor granicy właściciela: #<" + border.getOwnerColorHex() + ">&m---------", "Kolor granicy członka: #<" + border.getMemberColorHex() + ">&m---------", "Kolor granicy gościa: #<" + border.getNormalColorHex() + ">&m---------", "Kolor granicy ignorowanego: #<" + border.getIgnoredColorHex() + ">&m---------").anyMouseButtonText("przejść do konfiguracji granicy")), 13, HeadsType.BORDER.getHead(), event -> {
             event.setCancelled(true);
             new BorderChangeInventory(player, plot);
-        }, Map.of("%showing_border%", StringIconUtil.getReturnedEmojiFromBoolean(border.isDisplayBorderInsidePlot()), "%owner_color%", "#<" + border.getOwnerColorHex() + ">&m---------", "%added_color%", "#<" + border.getMemberColorHex() + ">&m---------", "%color%", "#<" + border.getNormalColorHex() + ">&m---------", "%ignored_color%", "#<" + border.getIgnoredColorHex() + ">&m---------"));
+        }, Map.of("%showing_border%", StringIconUtil.getReturnedEmojiFromBoolean(border.isDisplayBorderInsidePlot())));
 
         setItem(item("Zmień muzykę", LoreBuilder.create("Aktywna muzyka: %music%").anyMouseButtonText("przejść do konfiguracji muzyki")), 14, new ItemBuilder(Material.JUKEBOX), event -> {
             event.setCancelled(true);

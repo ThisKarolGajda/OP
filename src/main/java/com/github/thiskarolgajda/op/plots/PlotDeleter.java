@@ -1,6 +1,7 @@
 package com.github.thiskarolgajda.op.plots;
 
 import com.github.thiskarolgajda.op.region.RegionDatabase;
+import com.github.thiskarolgajda.op.region.events.RegionEventListener;
 import me.opkarol.oplibrary.injection.Inject;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,5 +14,6 @@ public class PlotDeleter {
     public static void deletePlot(@NotNull Plot plot) {
         regionDatabase.delete(plot.getRegion().getParentRegion());
         plotDatabase.delete(plot);
+        RegionEventListener.getPlayersInsideRegionData().remove(plot.getPlotId().toString());
     }
 }

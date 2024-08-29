@@ -234,7 +234,7 @@ public class VaultImpl implements Economy {
     @Contract("_, _ -> new")
     private @NotNull EconomyResponse withdraw(UUID uuid, double amount) {
         UserEconomy economy = getUserEconomy(uuid);
-        economy.add(amount);
+        economy.remove(amount);
         Plugin.get(UserEconomyDatabase.class).saveAsync(economy);
         return new EconomyResponse(amount, economy.getGold(), EconomyResponse.ResponseType.SUCCESS, "");
     }
@@ -242,7 +242,7 @@ public class VaultImpl implements Economy {
     @Contract("_, _ -> new")
     private @NotNull EconomyResponse deposit(UUID uuid, double amount) {
         UserEconomy economy = getUserEconomy(uuid);
-        economy.remove(amount);
+        economy.add(amount);
         Plugin.get(UserEconomyDatabase.class).saveAsync(economy);
         return new EconomyResponse(amount, economy.getGold(), EconomyResponse.ResponseType.SUCCESS, "");
     }

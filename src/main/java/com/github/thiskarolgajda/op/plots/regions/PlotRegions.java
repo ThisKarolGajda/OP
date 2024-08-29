@@ -19,10 +19,14 @@ import java.util.Optional;
 public class PlotRegions {
     @Inject
     private static RegionDatabase database;
-    private final Region parentRegion;
+    private final String parentRegion;
+
+    public Region getParentRegion() {
+        return database.get(parentRegion).orElseThrow();
+    }
 
     public List<Region> getChildrenRegions() {
-        return database.getChildren(parentRegion);
+        return database.getChildren(getParentRegion());
     }
 
     public List<Chunk> getChildrenRegionChunks() {
@@ -32,13 +36,13 @@ public class PlotRegions {
     }
 
     public List<Region> getRegions() {
-        List<Region> regions = database.getChildren(parentRegion);
-        regions.add(parentRegion);
+        List<Region> regions = database.getChildren(getParentRegion());
+        regions.add(getParentRegion());
         return regions;
     }
 
     public void add(@NotNull Region region) {
-        region.setParent(parentRegion);
+        region.setParent(getParentRegion());
         database.save(region);
     }
 
@@ -48,7 +52,7 @@ public class PlotRegions {
             return null;
         }
 
-        Region region = new Region(parentRegion.getId(), location);
+        Region region = new Region(getParentRegion().getId(), location);
         database.save(region);
         return region;
     }
@@ -59,7 +63,7 @@ public class PlotRegions {
 
     public List<Chunk> getChunks() {
         List<Chunk> chunks = new ArrayList<>(getChildrenRegionChunks());
-        chunks.add(parentRegion.getChunk());
+        chunks.add(getParentRegion().getChunk());
         return chunks;
     }
 }

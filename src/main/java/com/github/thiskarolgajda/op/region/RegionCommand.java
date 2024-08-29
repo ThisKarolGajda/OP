@@ -1,6 +1,6 @@
 package com.github.thiskarolgajda.op.region;
 
-import com.github.thiskarolgajda.op.region.inventory.RegionRoleSelectInventory;
+import com.github.thiskarolgajda.op.region.inventory.RegionPlayerRoleSelectInventory;
 import me.opkarol.oplibrary.commands.annotations.Command;
 import me.opkarol.oplibrary.commands.annotations.Subcommand;
 import me.opkarol.oplibrary.injection.Inject;
@@ -49,7 +49,7 @@ public class RegionCommand {
             return;
         }
 
-        new RegionRoleSelectInventory(player, region);
+        new RegionPlayerRoleSelectInventory(player, region, null);
     }
 
     @Subcommand("usun")

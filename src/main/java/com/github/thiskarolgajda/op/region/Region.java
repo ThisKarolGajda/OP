@@ -41,9 +41,9 @@ public final class Region implements DatabaseEntity<String> {
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
 
-        // TODO: add default rules
+        // TODO: add default allowedRules
         playerRules = new HashMap<>();
-        this.regionRules = new RegionRules(new HashSet<>());
+        this.regionRules = RegionRules.defaultRules();
 
         players = new HashSet<>();
         this.owner = owner;
@@ -53,9 +53,9 @@ public final class Region implements DatabaseEntity<String> {
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
 
-        // TODO: add default rules
+        // TODO: add default allowedRules
         playerRules = new HashMap<>();
-        this.regionRules = new RegionRules(new HashSet<>());
+        this.regionRules = RegionRules.defaultRules();
 
         players = new HashSet<>();
         this.parentRegion = parentRegion;

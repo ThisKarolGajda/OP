@@ -5,6 +5,7 @@ import me.opkarol.oplibrary.inventories.ItemBuilder;
 import me.opkarol.oplibrary.misc.Books;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,8 +15,8 @@ import java.util.function.Consumer;
 
 public class SelectColor {
 
-    public SelectColor(Player player, Consumer<String> onSelectedColor) {
-        new SelectColorInventory(player, onSelectedColor);
+    public SelectColor(Player player, Consumer<String> onSelectedColor, @Nullable Runnable onHome) {
+        new SelectColorInventory(player, onSelectedColor, onHome);
     }
 }
 
@@ -525,9 +526,9 @@ class SelectColorInventory extends ChestInventory {
         colors.add("8E00FD");
     }
 
-    protected SelectColorInventory(Player player, Consumer<String> onSelectedColor) {
+    protected SelectColorInventory(Player player, Consumer<String> onSelectedColor, @Nullable Runnable onHome) {
         super(5, "Wybierz kolor");
-        setListPattern(player);
+        setListPattern(player, onHome);
 
         for (String hex : colors) {
             setNextFree(item("%hex% (%color%)"), Books.getRandomHead(hex), event -> {

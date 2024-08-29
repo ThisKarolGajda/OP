@@ -36,6 +36,11 @@ public class RegionEventListener extends Listener {
         handlePlayerMovement(event.getPlayer(), event.getFrom(), event.getTo(), RegionEnterEvent.RegionEnterType.TELEPORT, event);
     }
 
+    @EventHandler
+    public void onExternalRegionEnter(ExternalRegionEnterEvent event) {
+        regionEnter(event.getPlayer(), event.getEnterType(), event.getRegion());
+    }
+
     private void handlePlayerMovement(Player player, Location fromLocation, Location toLocation, RegionEnterEvent.RegionEnterType enterType, Cancellable event) {
         if (toLocation == null) {
             return;

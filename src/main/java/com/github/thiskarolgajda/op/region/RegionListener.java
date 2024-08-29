@@ -4,6 +4,7 @@ import com.github.thiskarolgajda.op.region.player.PlayerRegionRuleType;
 import com.github.thiskarolgajda.op.region.rule.RegionRuleType;
 import me.opkarol.oplibrary.Plugin;
 import me.opkarol.oplibrary.injection.Inject;
+import me.opkarol.oplibrary.injection.messages.StringMessage;
 import me.opkarol.oplibrary.listeners.Listener;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,9 +33,16 @@ public class RegionListener extends Listener {
     @Inject
     private static RegionDatabase regionDatabase;
 
-    private void declineCancellableEvent(String key, Player player, Cancellable event, @Nullable Block block) {
-        //Messages.sendMessage(key, player);
-        player.sendMessage(key);
+    public static StringMessage cannotPlaceBlock = new StringMessage("Nie możesz postawić tutaj bloku!");
+    public static StringMessage cannotBreakBlock = new StringMessage("Nie możesz niszczyć tutaj bloku!");
+    public static StringMessage cannotFillBucket = new StringMessage("Nie możesz napełnić tutaj wiadra!");
+    public static StringMessage cannotEmptyBucket = new StringMessage("Nie możesz opróżnić tutaj wiadra!");
+    public static StringMessage cannotFightPlayer = new StringMessage("Nie możesz tutaj walczyć z innym graczem!");
+    public static StringMessage cannotFightEntity = new StringMessage("Nie możesz tutaj atakować!");
+    public static StringMessage cannotOpenChest = new StringMessage("Nie możesz tutaj otwierać skrzynki!");
+
+    private void declineCancellableEvent(StringMessage message, Player player, Cancellable event, @Nullable Block block) {
+        message.error(player);
         event.setCancelled(true);
         if (block != null) {
             Plugin.particle(player, Particle.EXPLOSION, block.getLocation().add(0.5, 0, 0.5), 1);
@@ -55,7 +63,7 @@ public class RegionListener extends Listener {
             return;
         }
 
-        declineCancellableEvent("regions.cannotPlaceBlock", event.getPlayer(), event, event.getBlockPlaced());
+        declineCancellableEvent(cannotPlaceBlock, event.getPlayer(), event, event.getBlockPlaced());
     }
 
     @EventHandler
@@ -70,7 +78,7 @@ public class RegionListener extends Listener {
             return;
         }
 
-        declineCancellableEvent("regions.cannotBreakBlock", event.getPlayer(), event, event.getBlock());
+        declineCancellableEvent(cannotBreakBlock, event.getPlayer(), event, event.getBlock());
     }
 
     @EventHandler
@@ -105,7 +113,7 @@ public class RegionListener extends Listener {
             return;
         }
 
-        declineCancellableEvent("regions.cannotFillBucket", event.getPlayer(), event, event.getBlockClicked());
+        declineCancellableEvent(cannotFillBucket, event.getPlayer(), event, event.getBlockClicked());
     }
 
     @EventHandler
@@ -120,7 +128,7 @@ public class RegionListener extends Listener {
             return;
         }
 
-        declineCancellableEvent("regions.cannotEmptyBucket", event.getPlayer(), event, event.getBlockClicked());
+        declineCancellableEvent(cannotEmptyBucket, event.getPlayer(), event, event.getBlockClicked());
     }
 
     @EventHandler
@@ -138,7 +146,7 @@ public class RegionListener extends Listener {
             return;
         }
 
-        declineCancellableEvent("regions.cannotFightPlayer", damager, event, null);
+        declineCancellableEvent(cannotFightPlayer, damager, event, null);
     }
 
     @EventHandler
@@ -156,7 +164,7 @@ public class RegionListener extends Listener {
             return;
         }
 
-        declineCancellableEvent("regions.cannotFightEntity", player, event, null);
+        declineCancellableEvent(cannotFightEntity, player, event, null);
     }
 
     @EventHandler
@@ -175,7 +183,7 @@ public class RegionListener extends Listener {
             return;
         }
 
-        declineCancellableEvent("regions.cannotOpenChest", event.getPlayer(), event, event.getClickedBlock());
+        declineCancellableEvent(cannotOpenChest, event.getPlayer(), event, event.getClickedBlock());
     }
 
     // Region listeners
