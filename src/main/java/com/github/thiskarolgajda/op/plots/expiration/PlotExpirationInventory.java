@@ -29,23 +29,23 @@ public class PlotExpirationInventory extends ChestInventory {
     public PlotExpirationInventory(Player player, @NotNull Plot plot) {
         super(3, "Przedłuż ważność działki");
 
-        setItem(item("Przedłuż o 1 dzień"), 10, Heads.get("71bc2bcfb2bd3759e6b1e86fc7a79585e1127dd357fc202893f9de241bc9e530"), event -> {
+        setItem(item("Przedłuż o 1 dzień", List.of("Koszt: %cost%")), 10, Heads.get("71bc2bcfb2bd3759e6b1e86fc7a79585e1127dd357fc202893f9de241bc9e530"), event -> {
             event.setCancelled(true);
             tryToBuy(player, 1, plot);
         }, Map.of("%cost%", MoneyTextFormatter.format(expirationCostPerHour * 1)));
-        setItem(item("Przedłuż o 12 godzin"), 11, Heads.get("916a7b8ba79a2efe5d9711f9f36cc6b28e31b474ac5a4924b4adf9fe9ea19a"), event -> {
+        setItem(item("Przedłuż o 12 godzin", List.of("Koszt: %cost%")), 11, Heads.get("916a7b8ba79a2efe5d9711f9f36cc6b28e31b474ac5a4924b4adf9fe9ea19a"), event -> {
             event.setCancelled(true);
             tryToBuy(player, 12, plot);
         }, Map.of("%cost%", MoneyTextFormatter.format(expirationCostPerHour * 12)));
-        setItem(item("Przedłuż o dzień"), 12, Heads.get("71bc2bcfb2bd3759e6b1e86fc7a79585e1127dd357fc202893f9de241bc9e530"), event -> {
+        setItem(item("Przedłuż o dzień", List.of("Koszt: %cost%")), 12, Heads.get("71bc2bcfb2bd3759e6b1e86fc7a79585e1127dd357fc202893f9de241bc9e530"), event -> {
             event.setCancelled(true);
             tryToBuy(player, 24, plot);
         }, Map.of("%cost%", MoneyTextFormatter.format(expirationCostPerHour * 24)));
-        setItem(item("Przedłuż o 3 dni"), 13, Heads.get("1d4eae13933860a6df5e8e955693b95a8c3b15c36b8b587532ac0996bc37e5"), event -> {
+        setItem(item("Przedłuż o 3 dni", List.of("Koszt: %cost%")), 13, Heads.get("1d4eae13933860a6df5e8e955693b95a8c3b15c36b8b587532ac0996bc37e5"), event -> {
             event.setCancelled(true);
             tryToBuy(player, 72, plot);
         }, Map.of("%cost%", MoneyTextFormatter.format(expirationCostPerHour * 72)));
-        setItem(item("Przedłuż o tydzień"), 14, Heads.get("6db6eb25d1faabe30cf444dc633b5832475e38096b7e2402a3ec476dd7b9"), event -> {
+        setItem(item("Przedłuż o tydzień", List.of("Koszt: %cost%")), 14, Heads.get("6db6eb25d1faabe30cf444dc633b5832475e38096b7e2402a3ec476dd7b9"), event -> {
             event.setCancelled(true);
             tryToBuy(player, 168, plot);
         }, Map.of("%cost%", MoneyTextFormatter.format(expirationCostPerHour * 168)));
@@ -73,7 +73,6 @@ public class PlotExpirationInventory extends ChestInventory {
             Plugin.get(PlotDatabase.class).save(plot);
         }
 
-        player.closeInventory();
         new PlotExpirationInventory(player, plot);
     }
 }

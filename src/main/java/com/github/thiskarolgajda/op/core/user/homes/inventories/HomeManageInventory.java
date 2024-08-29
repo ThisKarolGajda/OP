@@ -28,7 +28,6 @@ public class HomeManageInventory extends ChestInventory {
         setItem(item("change_name"), 10, new ItemBuilder(Material.NAME_TAG), event -> {
             event.setCancelled(true);
             new HomeChangeNameAnvilInventory(player, (string) -> {
-                player.closeInventory();
                 home.setName(string);
                 homes.saveHome(home);
                 new HomesInventory(player);

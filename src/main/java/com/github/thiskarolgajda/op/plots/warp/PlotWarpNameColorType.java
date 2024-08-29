@@ -10,30 +10,32 @@ import static com.github.thiskarolgajda.op.plots.warp.PlotWarpNameColorConfig.*;
 
 @Getter
 public enum PlotWarpNameColorType implements Serializable {
-    BLACK("black", "&0", Material.BLACK_WOOL),
-    DARK_BLUE("dark_blue", "&1", Material.BLUE_WOOL),
-    DARK_GREEN("dark_green", "&2", Material.GREEN_WOOL),
-    DARK_AQUA("dark_aqua", "&3", Material.LIGHT_BLUE_WOOL),
-    DARK_RED("dark_red", "&4", Material.RED_WOOL),
-    DARK_PURPLE("dark_purple", "&5", Material.PURPLE_WOOL),
-    GOLD("gold", "&6", Material.YELLOW_WOOL),
-    GRAY("gray", "&7", Material.LIGHT_GRAY_WOOL),
-    DARK_GRAY("dark_gray", "&8", Material.GRAY_WOOL),
-    BLUE("blue", "&9", Material.BLUE_WOOL),
-    GREEN("green", "&a", Material.GREEN_WOOL),
-    AQUA("aqua", "&b", Material.BLUE_WOOL),
-    RED("red", "&c", Material.RED_WOOL),
-    LIGHT_PURPLE("light_purple", "&d", Material.PURPLE_WOOL),
-    YELLOW("yellow", "&e", Material.YELLOW_WOOL),
-    WHITE("white", "&f", Material.WHITE_WOOL),
+    BLACK("&0", Material.BLACK_WOOL),
+    DARK_BLUE("&1", Material.BLUE_WOOL),
+    DARK_GREEN("&2", Material.GREEN_WOOL),
+    DARK_AQUA("&3", Material.LIGHT_BLUE_WOOL),
+    DARK_RED("&4", Material.RED_WOOL),
+    DARK_PURPLE("&5", Material.PURPLE_WOOL),
+    GOLD("&6", Material.YELLOW_WOOL),
+    GRAY("&7", Material.LIGHT_GRAY_WOOL),
+    DARK_GRAY("&8", Material.GRAY_WOOL),
+    BLUE("&9", Material.BLUE_WOOL),
+    GREEN("&a", Material.GREEN_WOOL),
+    AQUA("&b", Material.BLUE_WOOL),
+    RED("&c", Material.RED_WOOL),
+    LIGHT_PURPLE("&d", Material.PURPLE_WOOL),
+    YELLOW("&e", Material.YELLOW_WOOL),
+    WHITE("&f", Material.WHITE_WOOL),
+    CLASSIC_BLUE("#<34568B>", Material.BLUE_WOOL),
+    LIVING_CORAL("#<FF6F61>", Material.ORANGE_WOOL),
+    ULTRA_VIOLET("#<6B5B95>", Material.BLUE_WOOL),
+    GREENERY("#<88B04B>", Material.GREEN_WOOL)
     ;
 
-    private final String path;
     private final String code;
     private final Material material;
 
-    PlotWarpNameColorType(String path, String code, Material material) {
-        this.path = path;
+    PlotWarpNameColorType(String code, Material material) {
         this.code = code;
         this.material = material;
     }
@@ -56,6 +58,10 @@ public enum PlotWarpNameColorType implements Serializable {
             case LIGHT_PURPLE -> lightPurple;
             case YELLOW -> yellow;
             case WHITE -> white;
+            case CLASSIC_BLUE -> classicBlue;
+            case LIVING_CORAL -> livingCoral;
+            case ULTRA_VIOLET -> ultraViolet;
+            case GREENERY -> greenery;
         };
     }
 

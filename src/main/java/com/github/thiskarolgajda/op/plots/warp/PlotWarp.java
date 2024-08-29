@@ -21,7 +21,6 @@ public class PlotWarp {
     private boolean enabled;
 
     public PlotWarp(String plotName, OpLocation opLocation) {
-        System.out.println("plotname: " + plotName + ", location: " + opLocation);
         name = defaultPlotWarpName.replace("%plot%", plotName);
         description = "";
         this.location = opLocation;

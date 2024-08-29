@@ -2,7 +2,9 @@ package com.github.thiskarolgajda.op.plots.warp.review;
 
 import com.github.thiskarolgajda.op.plots.Plot;
 import com.github.thiskarolgajda.op.plots.PlotDatabase;
+import com.github.thiskarolgajda.op.plots.members.PlotPermissionsType;
 import com.github.thiskarolgajda.op.plots.warp.PlotWarpReview;
+import com.github.thiskarolgajda.op.plots.warp.inventories.PlotWarpManageInventory;
 import me.opkarol.oplibrary.Plugin;
 import me.opkarol.oplibrary.injection.messages.StringMessage;
 import me.opkarol.oplibrary.inventories.ChestInventory;
@@ -54,7 +56,9 @@ public class WarpReviewsInventory extends ChestInventory {
 
             askForReview(player, plot);
         });
-        setListPattern(player);
+
+
+        setListPattern(player, plot.isFeatureAvailable(player, PlotPermissionsType.USE_WARP) ? () -> new PlotWarpManageInventory(player, plot) : player::closeInventory);
 
         Set<PlotWarpReview> reviews = plot.getWarp().getReviews();
         reviews.forEach(review -> setNextFree(item("Recenzja %player%a", List.of("%review%")), new ItemBuilder(getItemBasedOnStars(review.stars())), event -> {

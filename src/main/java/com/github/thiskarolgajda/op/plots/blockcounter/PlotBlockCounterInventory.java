@@ -9,18 +9,33 @@ import me.opkarol.oplibrary.inventories.ChestInventory;
 import me.opkarol.oplibrary.tools.Heads;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Map;
+
+import static com.github.thiskarolgajda.op.plots.inventories.ChoosePlot.getPlotHeadBasedOnPlayerStatus;
 
 public class PlotBlockCounterInventory extends ChestInventory {
     @Inject
     private static PlotDatabase database;
 
     public PlotBlockCounterInventory(Player player, Plot plot) {
-        super(6, "plot_block_counter");
+        super(6, "Statystyki działki");
 
-        setItemHome(53, player, () -> new PlotMainInventory(plot, player));
+        setItem(item("Działka %name%", List.of("Właściciel: %owner%", "Łączna wartość: %total%", "Blok żelaza: %iron_block_value%", "Blok netheritu: %netherite_block_value%", "Blok diamentu: %diamond_block_value%", "Blok emeraldu: %emerald_block_value%", "Blok złota: %gold_block_value%", "Beacony: %beacon_value%")), 48, getPlotHeadBasedOnPlayerStatus(player, plot), event -> {}, Map.of(
+                "%name%", plot.getName(),
+                "%owner%", plot.getOwnerName(),
+                "%total%", String.valueOf(plot.getBlockCounter().getTotalValue()),
+                "%iron_block_value%", String.valueOf(plot.getBlockCounter().get(PlotBlockCounterType.IRON_BLOCK)),
+                "%netherite_block_value%", String.valueOf(plot.getBlockCounter().get(PlotBlockCounterType.NETHERITE_BLOCK)),
+                "%diamond_block_value%", String.valueOf(plot.getBlockCounter().get(PlotBlockCounterType.DIAMOND_BLOCK)),
+                "%emerald_block_value%", String.valueOf(plot.getBlockCounter().get(PlotBlockCounterType.EMERALD_BLOCK)),
+                "%gold_block_value%", String.valueOf(plot.getBlockCounter().get(PlotBlockCounterType.GOLD_BLOCK)),
+                "%beacon_value%", String.valueOf(plot.getBlockCounter().get(PlotBlockCounterType.BEACON))
+        ));
 
-        setItem(item("information"), 52, HeadsType.INFORMATION.getHead(), event -> event.setCancelled(true), Map.of(
+        setItemHome(49, player, () -> new PlotMainInventory(plot, player));
+
+        setItem(item("O co biega?", List.of("Każdy postawiony na działce specjalny blok dodaje wartość działki.", "Blok żelaza: %iron_block_value%", "Blok netheritu: %netherite_block_value%", "Blok diamentu: %diamond_block_value%", "Blok emeraldu: %emerald_block_value%", "Blok złota: %gold_block_value%", "Beacony: %beacon_value%")), 50, HeadsType.INFORMATION.getHead(), event -> event.setCancelled(true), Map.of(
                 "%iron_block_value%", String.valueOf(PlotBlockCounterType.IRON_BLOCK.getValue()),
                 "%netherite_block_value%", String.valueOf(PlotBlockCounterType.NETHERITE_BLOCK.getValue()),
                 "%diamond_block_value%", String.valueOf(PlotBlockCounterType.DIAMOND_BLOCK.getValue()),
@@ -28,14 +43,6 @@ public class PlotBlockCounterInventory extends ChestInventory {
                 "%gold_block_value%", String.valueOf(PlotBlockCounterType.GOLD_BLOCK.getValue()),
                 "%beacon_value%", String.valueOf(PlotBlockCounterType.BEACON.getValue())
         ));
-
-        for (int i = 51 - PlotBlockCounterType.values().length; i < 51; i++) {
-            PlotBlockCounterType type = PlotBlockCounterType.values()[50 - i];
-            setItem(item("block"), i, type.getMaterial(), event -> event.setCancelled(true), Map.of(
-                    "%name%", type.getMaterial().name(),
-                    "%amount%", String.valueOf(plot.getBlockCounter().get(type))
-            ));
-        }
 
         setLeaderboardPosition(1, 13);
         setLeaderboardPosition(2, 21);
@@ -52,8 +59,9 @@ public class PlotBlockCounterInventory extends ChestInventory {
     private void setLeaderboardPosition(int position, int slot) {
         Plot plot = database.getPlotInBlockCounterLeaderboard(position);
         if (plot != null) {
-            setItem(item("leaderboard"), slot, Heads.get(plot.getOwnerId()), event -> event.setCancelled(true), Map.of(
-                    "%name%", plot.getOwnerName(),
+            setItem(item("%place% miejsce - %name%", List.of("Właściciel: %owner%", "Łączna wartość: %total%", "Blok żelaza: %iron_block_value%", "Blok netheritu: %netherite_block_value%", "Blok diamentu: %diamond_block_value%", "Blok emeraldu: %emerald_block_value%", "Blok złota: %gold_block_value%", "Beacony: %beacon_value%")), slot, Heads.get(plot.getOwnerId()), event -> event.setCancelled(true), Map.of(
+                    "%name%", plot.getName(),
+                    "%owner%", plot.getOwnerName(),
                     "%place%", String.valueOf(position),
                     "%total%", String.valueOf(plot.getBlockCounter().getTotalValue()),
                     "%iron_block_value%", String.valueOf(plot.getBlockCounter().get(PlotBlockCounterType.IRON_BLOCK)),
@@ -64,7 +72,7 @@ public class PlotBlockCounterInventory extends ChestInventory {
                     "%beacon_value%", String.valueOf(plot.getBlockCounter().get(PlotBlockCounterType.BEACON))
             ));
         } else {
-            setItem(item("empty"), slot, HeadsType.GREY_HEAD.getHead(), event -> event.setCancelled(true));
+            setItem(item("Tu nic jeszcze nie ma!"), slot, HeadsType.GREY_HEAD.getHead(), event -> event.setCancelled(true));
         }
     }
 }

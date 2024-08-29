@@ -10,13 +10,13 @@ import com.github.thiskarolgajda.op.plots.warp.inventories.PlotWarpManageInvento
 import com.github.thiskarolgajda.op.utils.HeadsType;
 import me.opkarol.oplibrary.extensions.Vault;
 import me.opkarol.oplibrary.injection.Inject;
+import me.opkarol.oplibrary.injection.formatter.LoreBuilder;
 import me.opkarol.oplibrary.inventories.ChestInventory;
 import me.opkarol.oplibrary.inventories.ItemBuilder;
 import me.opkarol.oplibrary.location.OpLocation;
 import me.opkarol.oplibrary.misc.StringIconUtil;
 import me.opkarol.oplibrary.translations.Messages;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -39,7 +39,7 @@ public class PlotHomesInventory extends ChestInventory {
             int slot = 10 + i;
             if (homes.getHomes().size() > i) {
                 PlotHome home = homes.getHomes().get(i);
-                setItem(item("%name%"), slot, new ItemBuilder(home.getIcon()), event -> {
+                setItem(item("%name%", LoreBuilder.create("Dostępne: %available%", "Lokalizacja: %location%").leftMouseButtonText("się przeteleportać").rightMouseButtonText("zarządzać")), slot, new ItemBuilder(home.getIcon()), event -> {
                     event.setCancelled(true);
                     if (event.isShiftClick()) {
                         return;
@@ -55,7 +55,7 @@ public class PlotHomesInventory extends ChestInventory {
                 }, Map.of("%name%", home.getName(), "%location%", home.getLocation().toFamilyStringWithoutWorld(), "%available%", StringIconUtil.getReturnedEmojiFromBoolean(home.isAvailable(plot, player))));
             } else {
                 if (homes.getHomesLimit() <= i) {
-                    setItem(item("Zwiększ limit"), slot, new ItemBuilder(Material.BARRIER), event -> {
+                    setItem(item("Zwiększ limit", LoreBuilder.create("Cena zwiększenia: %cost%").anyMouseButtonText("zakupić ulepszenie")), slot, HeadsType.GREY_HEAD.getHead(), event -> {
                         event.setCancelled(true);
                         if (Vault.remove(player, costForPlotHomeLimitUpgrade) != Vault.VAULT_RETURN_INFO.WITHDRAW_SUCCESSFUL) {
                             notEnoughMoney.error(player, costForPlotHomeLimitUpgrade);
@@ -66,11 +66,11 @@ public class PlotHomesInventory extends ChestInventory {
                         player.closeInventory();
                         database.save(plot);
                         new PlotHomesInventory(player, plot);
-                    }, Map.of("%limit%", String.valueOf(homes.getHomesLimit()), "%price%", MoneyTextFormatter.format(costForPlotHomeLimitUpgrade)));
+                    }, Map.of("%limit%", String.valueOf(homes.getHomesLimit()), "%cost%", MoneyTextFormatter.format(costForPlotHomeLimitUpgrade)));
                     continue;
                 }
 
-                setItem(item("Pusto"), slot, HeadsType.GREY_HEAD.getHead(), event -> {
+                setItem(item("Nie przypisano domu", LoreBuilder.create().anyMouseButtonText("stworzyć nowy dom")), slot, HeadsType.GREY_HEAD.getHead(), event -> {
                     event.setCancelled(true);
                     if (homes.getHomesLimit() <= homes.getHomes().size()) {
                         Messages.sendMessage("homes.reachedLimit", player);
@@ -93,7 +93,7 @@ public class PlotHomesInventory extends ChestInventory {
 
         PlotWarp warp = plot.getWarp();
         if (warp.isEnabled()) {
-            setItem(item("warp_home"), 16, HeadsType.WARP.getHead(), event -> {
+            setItem(item("Warp działki", LoreBuilder.create().leftMouseButtonText("się przeteleportować").rightMouseButtonText("zarządzać")), 16, HeadsType.WARP.getHead(), event -> {
                 event.setCancelled(true);
                 if (event.isShiftClick()) {
                     return;
@@ -107,7 +107,7 @@ public class PlotHomesInventory extends ChestInventory {
                 new PlotWarpManageInventory(player, plot);
             }, Map.of("%name%", warp.getName()));
         } else {
-            setItem(item("warp_disabled"), 16, Material.BARRIER, event -> {
+            setItem(item("Wyłączony warp", LoreBuilder.create().anyMouseButtonText("zarządzać")), 16, HeadsType.WARP.getHead(), event -> {
                 event.setCancelled(true);
                 new PlotWarpManageInventory(player, plot);
             }, Map.of("%name%", warp.getName()));

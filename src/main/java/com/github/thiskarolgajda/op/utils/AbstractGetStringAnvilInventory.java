@@ -14,7 +14,7 @@ public abstract class AbstractGetStringAnvilInventory {
 
     public AbstractGetStringAnvilInventory(Player player, Consumer<String> onNameChange) {
         new AnvilGUI.Builder()
-                .itemLeft(new ItemBuilder(Material.NAME_TAG).setName("Wprowadź wartość"))
+                .itemLeft(new ItemBuilder(Material.NAME_TAG).setName(" "))
                 .itemRight(new ItemBuilder(Material.BARRIER).setName("&k"))
                 .itemOutput(new ItemBuilder(Material.NAME_TAG)
                         .setName(getItemName())

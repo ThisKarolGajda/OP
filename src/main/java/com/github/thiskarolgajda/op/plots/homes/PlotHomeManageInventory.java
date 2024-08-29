@@ -1,9 +1,10 @@
 package com.github.thiskarolgajda.op.plots.homes;
 
-import com.github.thiskarolgajda.op.core.user.homes.inventories.HomesInventory;
 import com.github.thiskarolgajda.op.plots.Plot;
 import com.github.thiskarolgajda.op.plots.PlotDatabase;
+import com.github.thiskarolgajda.op.utils.ConfirmationInventory;
 import me.opkarol.oplibrary.injection.Inject;
+import me.opkarol.oplibrary.injection.formatter.LoreBuilder;
 import me.opkarol.oplibrary.injection.messages.StringMessage;
 import me.opkarol.oplibrary.inventories.ChestInventory;
 import me.opkarol.oplibrary.inventories.ItemBuilder;
@@ -30,11 +31,11 @@ public class PlotHomeManageInventory extends ChestInventory {
     public PlotHomeManageInventory(Player player, Plot plot, PlotHome home) {
         super(3, "Zarzadzanie domem działki");
 
-        setItemHome(22, player, () -> new HomesInventory(player));
+        setItemHome(22, player, () -> new PlotHomesInventory(player, plot));
 
         PlotHomes homes = plot.getHomes();
 
-        setItem(item("Usuń dom"), 25, new ItemBuilder(Material.BARRIER), event -> {
+        setItem(item("Usuń dom", LoreBuilder.create("Tego nie da się cofnąć!").anyMouseButtonText("usunąć dom")), 23, new ItemBuilder(Material.BARRIER), event -> {
             event.setCancelled(true);
 
             if (homes.getHomes().size() <= 1) {
@@ -42,14 +43,15 @@ public class PlotHomeManageInventory extends ChestInventory {
                 return;
             }
 
-            homes.delete(home.getId());
-            player.closeInventory();
-            database.save(plot);
-            new PlotHomesInventory(player, plot);
-            removedPlotHome.success(player);
+            new ConfirmationInventory(player, "Potwierdź usunięcie domu", () -> {
+                homes.delete(home.getId());
+                database.save(plot);
+                new PlotHomesInventory(player, plot);
+                removedPlotHome.success(player);
+            }, () -> new PlotHomeManageInventory(player, plot, home));
         });
 
-        setItem(item("Zmień nazwę"), 10, new ItemBuilder(Material.NAME_TAG), event -> {
+        setItem(item("Zmień nazwę", LoreBuilder.create("Obecna nazwa: %name%").anyMouseButtonText("zmienić nazwę")), 10, new ItemBuilder(Material.NAME_TAG), event -> {
             event.setCancelled(true);
             new PlotHomeChangeNameAnvilInventory(player, (string) -> {
                 player.closeInventory();
@@ -60,7 +62,7 @@ public class PlotHomeManageInventory extends ChestInventory {
             });
         }, Map.of("%name%", home.getName()));
 
-        setItem(item("Zmień lokalizację"), 12, new ItemBuilder(Material.CRIMSON_ROOTS), event -> {
+        setItem(item("Zmień lokalizację", LoreBuilder.create("Obecna lokalizacja: %location%").anyMouseButtonText("przypisać obecną lokalizację")), 12, new ItemBuilder(Material.CRIMSON_ROOTS), event -> {
             event.setCancelled(true);
 
             Location location = player.getLocation();
@@ -76,22 +78,22 @@ public class PlotHomeManageInventory extends ChestInventory {
             changedPlotHomeLocation.success(player, home.getLocation().toFamilyStringWithoutWorld());
         }, Map.of("%location%", home.getLocation().toFamilyStringWithoutWorld()));
 
-        setItem(item("Zmień ikonę"), 14, new ItemBuilder(home.getIcon()), event -> {
+        setItem(item("Zmień ikonę", LoreBuilder.create("Obecna ikona: %icon%").anyMouseButtonText("wylosować ikonę działki")), 14, new ItemBuilder(home.getIcon()), event -> {
             event.setCancelled(true);
             home.setRandomIcon();
             homes.saveHome(home);
             new PlotHomeManageInventory(player, plot, home);
             Messages.sendMessage("plot.changedIcon", player);
             changedPlotIcon.success(player);
-        });
+        }, Map.of("%icon%", home.getIcon().name()));
 
-        setItem(item("Zmień dostęp"), 16, new ItemBuilder(Material.BAMBOO_DOOR), event -> {
+        setItem(item("Zmień dostęp", LoreBuilder.create("Obecny dostęp: %access%").anyMouseButtonText("zmienić dostęp do domu")), 16, new ItemBuilder(Material.BAMBOO_DOOR), event -> {
             event.setCancelled(true);
             home.changeAccess();
             homes.saveHome(home);
             new PlotHomeManageInventory(player, plot, home);
             changedPlotAccess.success(player);
-        }, Map.of("%access%", home.getAccessType().name()));
+        }, Map.of("%access%", home.getAccessType().getName()));
 
         fillEmptyWithBlank();
         open(player);

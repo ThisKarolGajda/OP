@@ -23,10 +23,14 @@ public class PlotWarpChangeNameAnvilInventory {
 
     public static StringMessage plotWarpNameMin = StringMessage.arg("Minimalna długość nazwy warpu działki to %min%.", object -> Map.of("%min%", object.toString()));
     public static StringMessage plotWarpNameMax = StringMessage.arg("Maksymalna długość nazwy warpu działki to %max%.", object -> Map.of("%max%", object.toString()));
-    public static StringMessage illegalPlotWarpName = new StringMessage("Podano nielegalną nazwę działki!");
-    public static StringMessage changedPlotWarpName = StringMessage.arg("Zmieniono nazwę działki na %name%.", object -> Map.of("%name%", object.toString()));
+    public static StringMessage illegalPlotWarpName = new StringMessage("Podano nielegalną nazwę warpu działki!");
+    public static StringMessage changedPlotWarpName = StringMessage.arg("Zmieniono nazwę warpu działki na %name%.", object -> Map.of("%name%", object.toString()));
 
     public PlotWarpChangeNameAnvilInventory(Player player, Plot plot) {
+        open(player, plot);
+    }
+
+    private void open(Player player, Plot plot) {
         new AnvilGUI.Builder()
                 .itemLeft(new ItemBuilder(Material.NAME_TAG).setName(" "))
                 .itemRight(new ItemBuilder(Material.BARRIER).setName("&k"))

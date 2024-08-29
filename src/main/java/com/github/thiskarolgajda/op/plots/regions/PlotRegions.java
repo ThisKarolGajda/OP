@@ -6,10 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import me.opkarol.oplibrary.injection.Inject;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @AllArgsConstructor
@@ -37,6 +40,17 @@ public class PlotRegions {
     public void add(@NotNull Region region) {
         region.setParent(parentRegion);
         database.save(region);
+    }
+
+    public @Nullable Region create(Location location) {
+        Optional<Region> optional = database.getRegion(location);
+        if (optional.isPresent()) {
+            return null;
+        }
+
+        Region region = new Region(parentRegion.getId(), location);
+        database.save(region);
+        return region;
     }
 
     public boolean containsChunk(Chunk chunk) {

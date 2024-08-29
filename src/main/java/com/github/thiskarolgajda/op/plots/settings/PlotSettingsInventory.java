@@ -13,6 +13,7 @@ import com.github.thiskarolgajda.op.plots.settings.music.PlotSettingMusicInvento
 import com.github.thiskarolgajda.op.plots.settings.weather.PlotWeatherChooseInventory;
 import com.github.thiskarolgajda.op.utils.HeadsType;
 import me.opkarol.oplibrary.Plugin;
+import me.opkarol.oplibrary.injection.formatter.LoreBuilder;
 import me.opkarol.oplibrary.injection.messages.StringMessage;
 import me.opkarol.oplibrary.inventories.ChestInventory;
 import me.opkarol.oplibrary.inventories.ItemBuilder;
@@ -20,7 +21,6 @@ import me.opkarol.oplibrary.misc.StringIconUtil;
 import me.opkarol.oplibrary.tools.Heads;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -41,12 +41,12 @@ public class PlotSettingsInventory extends ChestInventory {
     public PlotSettingsInventory(Player player, Plot plot) {
         super(3, "Ustawienia działki");
         setItemHome(22, player, () -> new PlotMainInventory(plot, player));
-        setItem(item("Zmień pogodę", List.of("Wybrana pogoda: %setting%")), 10, Heads.get("c465c121958c0522e3dccb3d14d68612d6317cd380b0e646b61b7420b904af02"), event -> {
+        setItem(item("Zmień pogodę", List.of("Wybrana pogoda: %setting%", "Uwaga: to jest efekt czysto kosmetyczny, nie ma on wpływu na respawn zwierząt czy inne mechaniki, które podlegają serwerowi!")), 10, Heads.get("c465c121958c0522e3dccb3d14d68612d6317cd380b0e646b61b7420b904af02"), event -> {
             event.setCancelled(true);
             new PlotWeatherChooseInventory(player, plot);
         }, Map.of("%setting%", plot.getSettings().getSelectedWeatherType().getName()));
 
-        setItem(item("Zmień porę dnia", List.of("Wybrana pora dnia: %setting%")), 11, Heads.get("71a11a03d6bc75b144be85848556a15f358ee6a65e0466f6c8b706e7f9bcf14"), event -> {
+        setItem(item("Zmień porę dnia", List.of("Wybrana pora dnia: %setting%", "Uwaga: to jest efekt czysto kosmetyczny, nie ma on wpływu na respawn zwierząt czy inne mechaniki, które podlegają serwerowi!")), 11, Heads.get("71a11a03d6bc75b144be85848556a15f358ee6a65e0466f6c8b706e7f9bcf14"), event -> {
             event.setCancelled(true);
             new PlotDayChooseInventory(player, plot);
         }, Map.of("%setting%", plot.getSettings().getSelectedDayType().getName()));
@@ -57,12 +57,12 @@ public class PlotSettingsInventory extends ChestInventory {
         }, Map.of("%amount%", String.valueOf(plot.getSettings().getAnimalSpawn().getDisabledSpawns().size())));
 
         PlotBorder border = plot.getBorder();
-        setItem(item("Zmień granice", List.of("Pokazywanie granicy na działce: %showing_border%", "Kolor granicy właściciela: %owner_color%", "Kolor granicy członka: %added_color%", "Kolor granicy gościa: %color%", "Kolor granicy ignorowanego: %ignored_color%")), 13, Heads.get("7c373b60c4804e8f851ba8829bc0250f2db03d5d9e9a010cc03a2d255ad7fc15"), event -> {
+        setItem(item("Zmień granice", LoreBuilder.create("Pokazywanie granicy na działce: %showing_border%", "Kolor granicy właściciela: %owner_color%", "Kolor granicy członka: %added_color%", "Kolor granicy gościa: %color%", "Kolor granicy ignorowanego: %ignored_color%").anyMouseButtonText("przejść do konfiguracji granicy")), 13, Heads.get("7c373b60c4804e8f851ba8829bc0250f2db03d5d9e9a010cc03a2d255ad7fc15"), event -> {
             event.setCancelled(true);
             new BorderChangeInventory(player, plot);
         }, Map.of("%showing_border%", StringIconUtil.getReturnedEmojiFromBoolean(border.isDisplayBorderInsidePlot()), "%owner_color%", "#<" + border.getOwnerColorHex() + ">&m---------", "%added_color%", "#<" + border.getMemberColorHex() + ">&m---------", "%color%", "#<" + border.getNormalColorHex() + ">&m---------", "%ignored_color%", "#<" + border.getIgnoredColorHex() + ">&m---------"));
 
-        setItem(item("Zmień muzykę", List.of("Aktywna muzyka: %music%")), 14, new ItemBuilder(Material.MUSIC_DISC_BLOCKS).setFlags(ItemFlag.values()), event -> {
+        setItem(item("Zmień muzykę", LoreBuilder.create("Aktywna muzyka: %music%").anyMouseButtonText("przejść do konfiguracji muzyki")), 14, new ItemBuilder(Material.JUKEBOX), event -> {
             event.setCancelled(true);
             new PlotSettingMusicInventory(player, plot);
         }, Map.of("%music%", plot.getSettings().getMusic().getSelectedSongName()));

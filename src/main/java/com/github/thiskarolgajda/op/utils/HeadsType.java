@@ -37,7 +37,11 @@ public enum HeadsType {
     HOME("12d7a751eb071e08dbbc95bc5d9d66e5f51dc6712640ad2dfa03defbb68a7f3a"),
     COLOR_BOX("f4e94273c727b1f2c9376b5cae4ed9a48d5851bd2ab2fd83d5f81a6e6aff193d"),
     SMILING_STEVE("8a234c2def829ba73ee1c048403e5f91316f0b5ce2bf7e70a4ce31fbe90d2ed3"),
-    FLYING_PIG("90e1ed3f83e3c949824adf57b976d4f8cabbb90d3b07d90cac7f68f01eb8751e");
+    FLYING_PIG("90e1ed3f83e3c949824adf57b976d4f8cabbb90d3b07d90cac7f68f01eb8751e"),
+    OWNER_PLOT("eb18cf9e1bf7ec57304ae92f2b00d91643cf0b65067dead34fb48baf18e3c385"),
+    PLOT("6fb68f0401181d0dc6d87f3da76196d3aa577298ba3351b0d32509ef495774db"),
+    CURRENT_PLOT("b26a0d7c23454ee0ba95bb31e41666f1631b91c2ee41711af2e9ef4b1165c4aa")
+    ;
 
     private final String texture;
 
