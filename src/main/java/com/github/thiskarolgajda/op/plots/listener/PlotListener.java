@@ -30,6 +30,10 @@ public class PlotListener extends Listener {
                 if (optional.isPresent()) {
                     Plot plot = optional.get();
                     List<Player> players = entry.getValue().stream().map(Bukkit::getPlayer).toList();
+                    if (players.isEmpty()) {
+                        continue;
+                    }
+
                     if (plot.getSpecials().isPlotBossBarVisible()) {
                         OpBossBar bossBar = new OpBossBar("Jesteś na działce " + plot.getName());
                         bossBar.displayAndRemoveAfter(players, 10);

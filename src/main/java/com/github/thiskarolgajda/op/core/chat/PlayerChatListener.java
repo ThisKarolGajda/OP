@@ -3,6 +3,7 @@ package com.github.thiskarolgajda.op.core.chat;
 import com.github.thiskarolgajda.op.core.user.tags.UserTags;
 import com.github.thiskarolgajda.op.core.user.tags.UserTagsDatabase;
 import com.github.thiskarolgajda.op.permission.PermissionType;
+import lombok.Getter;
 import me.opkarol.oplibrary.Plugin;
 import me.opkarol.oplibrary.extensions.PlaceholderAPI;
 import me.opkarol.oplibrary.injection.config.Config;
@@ -20,6 +21,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -34,7 +36,11 @@ public class PlayerChatListener extends Listener {
     private static final Map<String, String> EMOJI_MAP = createEmojiMap();
     private static final Pattern MENTION_PATTERN = Pattern.compile("@(\\w+)");
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    @Getter
+    private static final Queue<BaseComponent> messageCache = new ConcurrentLinkedQueue<>();
+    private static final int MAX_MESSAGES = 20;
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         event.setCancelled(true);
 
@@ -59,14 +65,17 @@ public class PlayerChatListener extends Listener {
             message = FormatTool.formatMessage(message);
         }
 
-        BaseComponent textComponent = new TextComponent(FormatTool.formatMessage("&8➻ "));
-        allComponents.addExtra(textComponent);
+        BaseComponent textStartComponent = new TextComponent(FormatTool.formatMessage("&8➻ "));
+        allComponents.addExtra(textStartComponent);
 
-        for (BaseComponent component : processMentions(player, message)) {
+        List<BaseComponent> messageComponents = processMentions(player, message);
+        for (BaseComponent component : messageComponents) {
             allComponents.addExtra(component);
         }
 
+        addMessageToCache(allComponents);
         sendMessage(allComponents);
+        Bukkit.getPluginManager().callEvent(new OpAsyncPlayerChatEvent(player, allComponents, textStartComponent, messageComponents));
     }
 
     private static @NotNull Map<String, String> createEmojiMap() {
@@ -89,17 +98,38 @@ public class PlayerChatListener extends Listener {
     }
 
     private @NotNull List<BaseComponent> processMentions(Player player, String message) {
-        Matcher matcher = MENTION_PATTERN.matcher(message);
+        StringBuilder modifiedMessage = new StringBuilder();
         List<BaseComponent> components = new ArrayList<>();
         int lastEnd = 0;
 
-        Set<String> onlinePlayerNames = Bukkit.getOnlinePlayers().stream()
-                .map(Player::getName)
-                .collect(Collectors.toSet());
+        Set<String> onlinePlayerNames = Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toSet());
+
+        for (String word : message.split(" ")) {
+            if (word.startsWith("@")) {
+                modifiedMessage.append(word).append(" ");
+                continue;
+            }
+
+            boolean replaced = false;
+            for (String onlinePlayerName : onlinePlayerNames) {
+                if (word.equalsIgnoreCase(onlinePlayerName)) {
+                    modifiedMessage.append("@").append(onlinePlayerName).append(" ");
+                    replaced = true;
+                    break;
+                }
+            }
+
+            if (!replaced) {
+                modifiedMessage.append(word).append(" ");
+            }
+        }
+
+        String finalMessage = modifiedMessage.toString().trim();
+        Matcher matcher = MENTION_PATTERN.matcher(finalMessage);
 
         while (matcher.find()) {
             if (lastEnd < matcher.start()) {
-                components.add(new TextComponent(getMessageCode(player) + message.substring(lastEnd, matcher.start())));
+                components.add(new TextComponent(getMessageCode(player) + finalMessage.substring(lastEnd, matcher.start())));
             }
 
             String mentionedName = matcher.group(1);
@@ -111,8 +141,10 @@ public class PlayerChatListener extends Listener {
                 for (String onlineName : onlinePlayerNames) {
                     if (onlineName.equalsIgnoreCase(mentionedName) || onlineName.toLowerCase().startsWith(mentionedName.toLowerCase())) {
                         mentionedPlayer = Bukkit.getPlayer(onlineName);
-                        components.add(addMentionComponent(mentionedPlayer));
-                        break;
+                        if (mentionedPlayer != null) {
+                            components.add(addMentionComponent(mentionedPlayer));
+                            break;
+                        }
                     }
                 }
                 if (mentionedPlayer == null) {
@@ -123,8 +155,8 @@ public class PlayerChatListener extends Listener {
             lastEnd = matcher.end();
         }
 
-        if (lastEnd < message.length()) {
-            components.add(new TextComponent(getMessageCode(player) + message.substring(lastEnd)));
+        if (lastEnd < finalMessage.length()) {
+            components.add(new TextComponent(getMessageCode(player) + finalMessage.substring(lastEnd)));
         }
 
         return components;
@@ -135,5 +167,12 @@ public class PlayerChatListener extends Listener {
         BaseComponent mentionComponent = TextComponent.fromLegacy(FormatTool.formatMessage(primaryColor.toCode() + "@" + mentionedPlayer.getName()));
         setComponentProfileOpenAction(mentionComponent, mentionedPlayer, getOpenProfileMessage(mentionedPlayer.getName()));
         return mentionComponent;
+    }
+
+    private void addMessageToCache(BaseComponent message) {
+        if (messageCache.size() >= MAX_MESSAGES) {
+            messageCache.poll();
+        }
+        messageCache.add(message);
     }
 }

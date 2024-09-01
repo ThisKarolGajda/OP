@@ -21,7 +21,9 @@ public class PlotBlockCounterInventory extends ChestInventory {
     public PlotBlockCounterInventory(Player player, Plot plot) {
         super(6, "Statystyki działki");
 
-        setItem(item("Działka %name%", List.of("Właściciel: %owner%", "Łączna wartość: %total%", "Blok żelaza: %iron_block_value%", "Blok netheritu: %netherite_block_value%", "Blok diamentu: %diamond_block_value%", "Blok emeraldu: %emerald_block_value%", "Blok złota: %gold_block_value%", "Beacony: %beacon_value%")), 48, getPlotHeadBasedOnPlayerStatus(player, plot), event -> {}, Map.of(
+        setItem(item("Działka %name%", List.of("Właściciel: %owner%", "Łączna wartość: %total%", "Blok żelaza: %iron_block_value%", "Blok netheritu: %netherite_block_value%", "Blok diamentu: %diamond_block_value%", "Blok emeraldu: %emerald_block_value%", "Blok złota: %gold_block_value%", "Beacony: %beacon_value%")), 48, getPlotHeadBasedOnPlayerStatus(player, plot), event -> {
+            event.setCancelled(true);
+        }, Map.of(
                 "%name%", plot.getName(),
                 "%owner%", plot.getOwnerName(),
                 "%total%", String.valueOf(plot.getBlockCounter().getTotalValue()),

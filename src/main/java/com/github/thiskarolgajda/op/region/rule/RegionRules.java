@@ -11,7 +11,7 @@ import static com.github.thiskarolgajda.op.region.rule.RegionRuleType.*;
 
 public record RegionRules(Set<RegionRuleType> allowedRules) {
 
-    public boolean contains(RegionRuleType type) {
+    public boolean isRuleAllowed(RegionRuleType type) {
         return allowedRules.contains(type);
     }
 

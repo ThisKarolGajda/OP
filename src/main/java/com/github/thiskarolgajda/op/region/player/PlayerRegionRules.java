@@ -8,7 +8,7 @@ public record PlayerRegionRules(Set<PlayerRegionRuleType> allowedRules) {
         return allowedRules.contains(rule);
     }
 
-    public void toggleRule(PlayerRegionRuleType rule) {
+    public void toggle(PlayerRegionRuleType rule) {
         if (allowedRules.contains(rule)) {
             allowedRules.remove(rule);
         } else {

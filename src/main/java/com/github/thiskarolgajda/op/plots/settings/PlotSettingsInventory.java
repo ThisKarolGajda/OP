@@ -12,6 +12,7 @@ import com.github.thiskarolgajda.op.plots.settings.daytime.PlotDayChooseInventor
 import com.github.thiskarolgajda.op.plots.settings.music.PlotSettingMusicInventory;
 import com.github.thiskarolgajda.op.plots.settings.weather.PlotWeatherChooseInventory;
 import com.github.thiskarolgajda.op.region.inventory.RegionPlayerRoleSelectInventory;
+import com.github.thiskarolgajda.op.region.inventory.RegionRuleSelectInventory;
 import com.github.thiskarolgajda.op.utils.HeadsType;
 import me.opkarol.oplibrary.Plugin;
 import me.opkarol.oplibrary.injection.formatter.LoreBuilder;
@@ -46,6 +47,11 @@ public class PlotSettingsInventory extends ChestInventory {
         setItem(item("Zmień zasady graczy na regionie", List.of("Zaawansowana opcja! Jeśli nie wiesz co robisz, lepiej tutaj nie wchodź. Możesz przypadkowo włączyć opcję niszczenia/stawiania bloków przez gości!")), 9, HeadsType.VILLAGE.getHead(), event -> {
             event.setCancelled(true);
             new RegionPlayerRoleSelectInventory(player, plot.getRegion().getParentRegion(), () -> new PlotSettingsInventory(player, plot));
+        });
+
+        setItem(item("Zmień zasady regionu", List.of("Zaawansowana opcja! Jeśli nie wiesz co robisz, lepiej tutaj nie wchodź. Możesz przypadkowo włączyć opcję zniszczenia działki przez innych graczy (TNT).")), 17, HeadsType.VILLAGE.getHead(), event -> {
+            event.setCancelled(true);
+            new RegionRuleSelectInventory(player, plot.getRegion().getParentRegion(), () -> new PlotSettingsInventory(player, plot));
         });
 
         setItem(item("Zmień pogodę", List.of("Wybrana pogoda: %setting%", "Uwaga: to jest efekt czysto kosmetyczny, nie ma on wpływu na respawn zwierząt czy inne mechaniki, które podlegają serwerowi!")), 10, Heads.get("c465c121958c0522e3dccb3d14d68612d6317cd380b0e646b61b7420b904af02"), event -> {

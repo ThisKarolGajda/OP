@@ -70,7 +70,7 @@ public class PlotHomesInventory extends ChestInventory {
                     continue;
                 }
 
-                setItem(item("Nie przypisano domu", LoreBuilder.create().anyMouseButtonText("stworzyć nowy dom")), slot, HeadsType.GREY_HEAD.getHead(), event -> {
+                setItem(item("Nie przypisano domu", LoreBuilder.create().anyMouseButtonText("stworzyć nowy dom")), slot, HeadsType.TELEPORT.getHead(), event -> {
                     event.setCancelled(true);
                     if (homes.getHomesLimit() <= homes.getHomes().size()) {
                         Messages.sendMessage("homes.reachedLimit", player);

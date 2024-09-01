@@ -1,6 +1,7 @@
 package com.github.thiskarolgajda.op.region;
 
 import me.opkarol.oplibrary.database.manager.Database;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +40,7 @@ public class RegionDatabase extends Database<String, Region> {
     }
 
     public boolean containsRegion(Location location) {
-        return containsRegion(location.getChunk().getX(), location.getChunk().getZ());
+        return containsRegion(location.getChunk());
     }
 
     public void delete(@NotNull Region region) {
@@ -54,5 +55,9 @@ public class RegionDatabase extends Database<String, Region> {
     @Override
     public boolean useMultiFilesForJSON() {
         return true;
+    }
+
+    public boolean containsRegion(@NotNull Chunk chunk) {
+        return containsRegion(chunk.getX(), chunk.getZ());
     }
 }

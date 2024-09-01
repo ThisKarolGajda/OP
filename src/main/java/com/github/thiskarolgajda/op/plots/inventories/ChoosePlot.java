@@ -52,10 +52,7 @@ class PlotChooseInventory extends ChestInventory {
         Optional<Plot> plotAtLocation = database.getPlot(player.getLocation());
         if (plotAtLocation.isPresent()) {
             Plot plot = plotAtLocation.get();
-            setNextFree(item("plot"), HeadsType.CURRENT_PLOT.getHead(), event -> {
-                event.setCancelled(true);
-                action.accept(plot);
-            }, Map.of("%plot%", plot.getName(), "%name%", plot.getOwnerName(), "%creation_date%", plot.getFormattedCreationDate(), "%members%", plot.getMembersNames()));
+            setItem(HeadsType.CURRENT_PLOT.getHead(), action, plot);
             list.removeIf(plot1 -> plot1.getId().equals(plot.getId()));
             if (list.isEmpty()) {
                 action.accept(plot);
@@ -68,12 +65,16 @@ class PlotChooseInventory extends ChestInventory {
             return;
         }
 
-        list.forEach(plot -> setNextFree(item("plot"), ChoosePlot.getPlotHeadBasedOnPlayerStatus(player, plot), event -> {
-            event.setCancelled(true);
-            action.accept(plot);
-        }, Map.of("%plot%", plot.getName(), "%name%", plot.getOwnerName(), "%creation_date%", plot.getFormattedCreationDate(), "%members%", plot.getMembersNames())));
+        list.forEach(plot -> setItem(ChoosePlot.getPlotHeadBasedOnPlayerStatus(player, plot), action, plot));
 
         open(player);
+    }
+
+    private void setItem(ItemBuilder player, Consumer<Plot> action, @NotNull Plot plot) {
+        setNextFree(item("%plot%", List.of("Właściciel: %owner%", "Data stworzenia: %creation_date%", "Członkowie: %members%")), player, event -> {
+            event.setCancelled(true);
+            action.accept(plot);
+        }, Map.of("%plot%", plot.getName(), "%owner%", plot.getOwnerName(), "%creation_date%", plot.getFormattedCreationDate(), "%members%", plot.getMembersNames()));
     }
 
     public PlotChooseInventory(Player player, Consumer<Plot> action) {

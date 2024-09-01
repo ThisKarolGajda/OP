@@ -5,17 +5,21 @@ import com.github.thiskarolgajda.op.core.user.economy.MoneyTextFormatter;
 import com.github.thiskarolgajda.op.core.user.homes.UserHome;
 import com.github.thiskarolgajda.op.core.user.homes.UserHomes;
 import com.github.thiskarolgajda.op.core.user.homes.UserHomesDatabase;
+import com.github.thiskarolgajda.op.plots.homes.PlotHomesInventory;
+import com.github.thiskarolgajda.op.plots.inventories.ChoosePlot;
 import com.github.thiskarolgajda.op.utils.HeadsType;
 import me.opkarol.oplibrary.Plugin;
 import me.opkarol.oplibrary.extensions.Vault;
+import me.opkarol.oplibrary.injection.formatter.LoreBuilder;
 import me.opkarol.oplibrary.inventories.ChestInventory;
 import me.opkarol.oplibrary.inventories.ItemBuilder;
 import me.opkarol.oplibrary.translations.Messages;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Map;
 
+import static com.github.thiskarolgajda.op.OP.notEnoughMoney;
 import static com.github.thiskarolgajda.op.core.user.homes.UserHomes.costPerHomeLimitUpgrade;
 import static com.github.thiskarolgajda.op.core.user.homes.UserHomes.defaultHouseName;
 import static me.opkarol.oplibrary.injection.messages.StringMessage.errorSound;
@@ -23,9 +27,9 @@ import static me.opkarol.oplibrary.injection.messages.StringMessage.errorSound;
 public class HomesInventory extends ChestInventory {
 
     public HomesInventory(Player player) {
-        super(3, "homes");
+        super(3, "Twoje domy");
 
-//        setItem(item("plots"), 26, HeadsType.HOME.getHead(), event -> new ChoosePlot(player, (plot) -> new PlotHomesInventory(player, plot)));
+        setItem(item("Domy działek"), 26, HeadsType.HOME.getHead(), event -> new ChoosePlot(player, (plot) -> new PlotHomesInventory(player, plot)));
 
         UserHomes homes = Plugin.get(UserHomesDatabase.class).getSafe(player.getUniqueId());
 
@@ -33,7 +37,7 @@ public class HomesInventory extends ChestInventory {
             int slot = 11 + i;
             if (homes.getHomes().size() > i) {
                 UserHome home = homes.getHomes().get(i);
-                setItem(item("home"), slot, new ItemBuilder(home.getIcon()), event -> {
+                setItem(item("%name%", LoreBuilder.create("Lokalizacja: %location%").leftMouseButtonText("się przeteleportować").rightMouseButtonText("zarządzdać")), slot, new ItemBuilder(home.getIcon()), event -> {
                     event.setCancelled(true);
                     if (event.isShiftClick()) {
                         return;
@@ -52,10 +56,10 @@ public class HomesInventory extends ChestInventory {
                 ));
             } else {
                 if (homes.getHomesLimit() <= i) {
-                    setItem(item("increase_limit"), slot, new ItemBuilder(Material.BARRIER), event -> {
+                    setItem(item("Zwiększ limit domu", List.of("Cena: %price%")), slot, HeadsType.GREY_HEAD.getHead(), event -> {
                         event.setCancelled(true);
                         if (Vault.remove(player, costPerHomeLimitUpgrade) != Vault.VAULT_RETURN_INFO.WITHDRAW_SUCCESSFUL) {
-                            Messages.sendMessage("notEnoughMoney", player, Map.of("%cost%", MoneyTextFormatter.format(costPerHomeLimitUpgrade)));
+                            notEnoughMoney.error(player, costPerHomeLimitUpgrade);
                             return;
                         }
 
@@ -69,7 +73,7 @@ public class HomesInventory extends ChestInventory {
                     continue;
                 }
 
-                setItem(item("empty"), slot, HeadsType.GREY_HEAD.getHead(), event -> {
+                setItem(item("Nie przypisano domu", LoreBuilder.create().anyMouseButtonText("stworzyć nowy dom")), slot, HeadsType.TELEPORT.getHead(), event -> {
                     event.setCancelled(true);
                     if (homes.getHomesLimit() <= homes.getHomes().size()) {
                         Messages.sendMessage("homes.reachedLimit", player);

@@ -1,5 +1,6 @@
 package com.github.thiskarolgajda.op.region;
 
+import com.github.thiskarolgajda.op.permission.PermissionType;
 import com.github.thiskarolgajda.op.region.player.PlayerRegionRuleType;
 import com.github.thiskarolgajda.op.region.player.PlayerRegionRules;
 import com.github.thiskarolgajda.op.region.role.RegionRoleType;
@@ -228,6 +229,10 @@ public final class Region implements DatabaseEntity<String> {
 
 
     public boolean can(@NotNull Player player, PlayerRegionRuleType rule) {
+        if (PermissionType.ADMIN.hasPermission(player)) {
+            return true;
+        }
+
         Region parentRegion = getParentRegion();
         if (parentRegion != null) {
             return parentRegion.can(player, rule);
@@ -250,7 +255,7 @@ public final class Region implements DatabaseEntity<String> {
             return parentRegion.can(type);
         }
 
-        return regionRules.contains(type);
+        return regionRules.isRuleAllowed(type);
     }
 
     private boolean isMember(Player player) {

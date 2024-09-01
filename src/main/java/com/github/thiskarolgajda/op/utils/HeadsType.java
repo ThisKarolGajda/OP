@@ -41,7 +41,9 @@ public enum HeadsType {
     OWNER_PLOT("eb18cf9e1bf7ec57304ae92f2b00d91643cf0b65067dead34fb48baf18e3c385"),
     PLOT("6fb68f0401181d0dc6d87f3da76196d3aa577298ba3351b0d32509ef495774db"),
     CURRENT_PLOT("b26a0d7c23454ee0ba95bb31e41666f1631b91c2ee41711af2e9ef4b1165c4aa"),
-    BORDER("7c373b60c4804e8f851ba8829bc0250f2db03d5d9e9a010cc03a2d255ad7fc15");
+    BORDER("7c373b60c4804e8f851ba8829bc0250f2db03d5d9e9a010cc03a2d255ad7fc15"),
+    TELEPORT("c3a8e402dad1b7dad9aae6f4015932183429ce87bbbeced3119026f8296336c2")
+    ;
 
     private final String texture;
 

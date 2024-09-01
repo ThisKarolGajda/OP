@@ -26,12 +26,12 @@ public class RegionPlayerRulesSelectInventory extends ChestInventory {
             boolean isAllowed = rules.isRuleAllowed(rule);
             setNextFree(item("Zasada %name%", LoreBuilder.create("Aktywna: %enabled%").anyMouseButtonText("przełączyć")), Books.getRandomHead(rule.name()), event -> {
                 event.setCancelled(true);
-                rules.toggleRule(rule);
+                rules.toggle(rule);
                 region.getPlayerRules().put(role, rules);
                 Plugin.get(RegionDatabase.class).save(region);
                 new RegionPlayerRulesSelectInventory(player, region, role, onHome);
             }, Map.of(
-                    "%name%", rule.name(),
+                    "%name%", rule.getName(),
                     "%enabled%", StringIconUtil.getReturnedEmojiFromBoolean(isAllowed)
             ));
         }
