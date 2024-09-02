@@ -3,15 +3,16 @@ package com.github.thiskarolgajda.op.plots.inventories;
 import com.github.thiskarolgajda.op.OP;
 import com.github.thiskarolgajda.op.permission.PermissionType;
 import com.github.thiskarolgajda.op.plots.Plot;
-import com.github.thiskarolgajda.op.plots.border.PlotBorderHighlighter;
 import com.github.thiskarolgajda.op.plots.blockcounter.PlotBlockCounterInventory;
 import com.github.thiskarolgajda.op.plots.blocklimits.PlotBlockLimitsInventory;
+import com.github.thiskarolgajda.op.plots.border.PlotBorderHighlighter;
 import com.github.thiskarolgajda.op.plots.effects.PlotEffectsInventory;
 import com.github.thiskarolgajda.op.plots.expiration.PlotExpirationInventory;
 import com.github.thiskarolgajda.op.plots.homes.PlotHomesInventory;
 import com.github.thiskarolgajda.op.plots.members.ManageMembersInventory;
 import com.github.thiskarolgajda.op.plots.members.PlotPermissionsType;
 import com.github.thiskarolgajda.op.plots.settings.PlotSettingsInventory;
+import com.github.thiskarolgajda.op.plots.shopchests.PlotShopChestsInventory;
 import com.github.thiskarolgajda.op.plots.upgrades.PlotUpgradesInventory;
 import com.github.thiskarolgajda.op.plots.warp.inventories.PlotWarpManageInventory;
 import com.github.thiskarolgajda.op.utils.HeadsType;
@@ -25,8 +26,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
-
-import static me.opkarol.oplibrary.translations.Messages.sendMessage;
 
 public class PlotMainInventory extends ChestInventory {
     public PlotMainInventory(@NotNull Plot plot, Player player) {
@@ -46,6 +45,11 @@ public class PlotMainInventory extends ChestInventory {
         setWarp(plot, player);
         setAdminTools(plot, player);
         setHomes(plot, player);
+
+        setItem(item("Skrzynki sklepu na działce"), 0, new ItemBuilder(), event -> {
+            event.setCancelled(true);
+            new PlotShopChestsInventory(player, plot);
+        }, Map.of());
 
         fillEmptyWithBlank();
         open(player);
