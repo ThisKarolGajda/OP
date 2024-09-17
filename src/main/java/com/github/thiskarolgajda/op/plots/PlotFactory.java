@@ -10,6 +10,7 @@ import com.github.thiskarolgajda.op.plots.homes.PlotHomes;
 import com.github.thiskarolgajda.op.plots.ignored.PlotIgnored;
 import com.github.thiskarolgajda.op.plots.logs.PlotLogs;
 import com.github.thiskarolgajda.op.plots.members.PlotMembers;
+import com.github.thiskarolgajda.op.plots.permits.PlotPermits;
 import com.github.thiskarolgajda.op.plots.regions.PlotRegions;
 import com.github.thiskarolgajda.op.plots.settings.PlotSettings;
 import com.github.thiskarolgajda.op.plots.shopchests.PlotShopChests;
@@ -63,7 +64,7 @@ public class PlotFactory {
 
         String plotName = generateRandomPlotName(player.getName());
         OpLocation plotLocation = new OpLocation(location);
-        Plot plot = new Plot(plotId, plotName, new PlotWarp(plotName, plotLocation), player.getUniqueId(), LocalDateTime.now(), new PlotExpiration(), new PlotMembers(), new PlotIgnored(), new PlotHomes(plotLocation), new PlotEffects(), new PlotBorder(), new PlotUpgrades(), new PlotSettings(), new PlotBlockLimits(), new PlotBlockCounter(), new PlotHologram(), new PlotSpecials(), new PlotShopChests(), new PlotRegions(centerRegion.getId()), new PlotLogs());
+        Plot plot = new Plot(plotId, plotName, new PlotWarp(plotName, plotLocation), player.getUniqueId(), LocalDateTime.now(), new PlotExpiration(), new PlotMembers(), new PlotIgnored(), new PlotHomes(plotLocation), new PlotEffects(), new PlotBorder(), new PlotUpgrades(), new PlotSettings(), new PlotBlockLimits(), new PlotBlockCounter(), new PlotHologram(), new PlotSpecials(), new PlotShopChests(), new PlotRegions(centerRegion.getId()), new PlotLogs(), new PlotPermits());
         plotDatabase.save(plot);
 
         List<Chunk> chunkList = plot.getRegion().getChunks();
@@ -163,6 +164,4 @@ public class PlotFactory {
 
         return defaultPlotLimit;
     }
-
-
 }

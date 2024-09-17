@@ -79,7 +79,7 @@ public class PlotHomesInventory extends ChestInventory {
 
                     Location location = player.getLocation();
 
-                    if (!plot.canLocationBeHome(location)) {
+                    if (plot.isIllegalHomeLocation(location)) {
                         Messages.sendMessage("plot.invalidHomeLocation", player);
                         return;
                     }

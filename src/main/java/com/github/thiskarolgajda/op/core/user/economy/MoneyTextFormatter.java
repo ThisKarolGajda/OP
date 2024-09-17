@@ -19,7 +19,7 @@ public class MoneyTextFormatter {
             } else if (number >= 1_000) {
                 return String.format("%dK", number / 1_000) + " \uD83D\uDCB0";
             } else {
-                return String.format("%df", number) + " \uD83D\uDCB0";
+                return String.format("%d", number) + " \uD83D\uDCB0";
             }
         }
 

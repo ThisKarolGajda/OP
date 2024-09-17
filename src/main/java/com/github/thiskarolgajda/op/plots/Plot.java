@@ -13,6 +13,7 @@ import com.github.thiskarolgajda.op.plots.logs.PlotLogs;
 import com.github.thiskarolgajda.op.plots.members.PlotMember;
 import com.github.thiskarolgajda.op.plots.members.PlotMembers;
 import com.github.thiskarolgajda.op.plots.members.PlotPermissionsType;
+import com.github.thiskarolgajda.op.plots.permits.PlotPermits;
 import com.github.thiskarolgajda.op.plots.regions.PlotRegions;
 import com.github.thiskarolgajda.op.plots.settings.PlotSettings;
 import com.github.thiskarolgajda.op.plots.shopchests.PlotShopChests;
@@ -61,15 +62,16 @@ public class Plot implements DatabaseEntity<UUID> {
     private PlotShopChests shopChests;
     private PlotRegions region;
     private PlotLogs logs;
+    private PlotPermits permits;
 
     @Override
     public UUID getId() {
         return plotId;
     }
 
-    public boolean canLocationBeHome(@NotNull Location location) {
+    public boolean isIllegalHomeLocation(@NotNull Location location) {
         Chunk chunk = location.getChunk();
-        return region.containsChunk(chunk);
+        return !region.containsChunk(chunk);
     }
 
     public boolean isOwner(UUID uuid) {
